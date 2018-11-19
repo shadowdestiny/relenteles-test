@@ -2,7 +2,7 @@
 
 Un ejemplo de RESTful API creado con Laravel Lumen.
 
-## Pre-requisitos
+## Pre-requirements
 
 1) This RESTful API was created with [Laravel Lumen] (https://lumen.laravel.com/), which requires a modern version of PHP and some of its extensions installed
 
