@@ -55,19 +55,12 @@ DB_PASSWORD=mypassword
 CACHE_DRIVER=file
 QUEUE_CONNECTION=sync
 
-REDIS_HOST=192.168.99.100
-REDIS_PASSWORD=null
-REDIS_PORT=32782
 ```
 
 3) Start your server at port 8085
 ```
 php -S localhost:8085 -t public
 ```
-
-4) To handle the use of cache in the query query, you have to install redis as a doker container and pass the ports in the .env
-
-
 
 ## Lumen PHP Framework
 
