@@ -67,7 +67,6 @@ php -S localhost:8085 -t public
 
 4) To handle the use of cache in the query query, you have to install redis as a doker container and pass the ports in the .env
 
-5) Actualmente "remember Cache" se realiza desde la clase 
 
 
 ## Lumen PHP Framework
