@@ -21,8 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('shipping_city');
             $table->integer('shipping_state');
             $table->string('shipping_zipcode');
-            $table->string('email')->unique();
-            $table->string('api_token', 512)->unique();
+            $table->string('email',100)->unique();
+            $table->string('api_token',1024);
             $table->string('password');
             $table->enum('type_user',[1,2]);
             $table->rememberToken();
