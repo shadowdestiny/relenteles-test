@@ -41,7 +41,256 @@
 						},
 						"description": null
 					},
-					"response": []
+					"response": [
+						{
+							"id": "3f9b58b7-cddb-4617-907a-3c2f64e8c23c",
+							"name": "CREATE user SELLER",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Api-Token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjo0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3NDA3MjgsImV4cCI6MTU0Mjc0NDMyOCwibmJmIjoxNTQyNzQwNzI4LCJqdGkiOiJZTmRVWXJMUmFEUHRJRDBuIn0.FJJiWlFLefFOaZVjeX5iHnaA36yYYVJsv47-34Jdvhg"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"first_name\"\t\t\t\t: \"Luis\",\n  \"last_name\"\t\t\t\t: \"Marin\",\n  \"shipping_address\"\t\t: \"demo\",\n  \"shipping_city\"\t\t\t: \"demo city\",\n  \"shipping_state\"\t\t\t: \"1\",\n  \"shipping_zipcode\"\t\t: \"0123456\",\n  \"email\"\t\t\t\t\t: \"lmari4@elaniin.com\",\n  \"password\"\t\t\t\t: \"123456\",\n  \"type_user\"               : 1 \n}\n"
+								},
+								"url": {
+									"raw": "http://localhost:8090/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"_postman_previewtype": "text",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true",
+									"name": "Access-Control-Allow-Credentials",
+									"description": "Indicates whether or not the response to the request can be exposed when the credentials flag is true. When used as part of a response to a preflight request, this indicates whether or not the actual request can be made using credentials."
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, Authorization, X-Requested-With",
+									"name": "Access-Control-Allow-Headers",
+									"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, GET, OPTIONS, PUT, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "86400",
+									"name": "Access-Control-Max-Age",
+									"description": "Indicates how long the results of a preflight request can be cached in seconds."
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Connection",
+									"value": "close",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 20 Nov 2018 19:22:24 +0000",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 20 Nov 2018 19:22:24 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Host",
+									"value": "localhost:8090",
+									"name": "Host",
+									"description": "Custom header"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.1.8",
+									"name": "X-Powered-By",
+									"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 23:14:07 GMT-0400 (Hora estándar oeste, Sudamérica)",
+									"httpOnly": false,
+									"domain": "localhost",
+									"path": "/APISinListarEndidadFinancieraTST",
+									"secure": false,
+									"value": "YV5hqfJW3CH2r-DPg2__ADwn2_GfmqDl6RTJJNjk.aoshi",
+									"key": "JSESSIONID"
+								}
+							],
+							"responseTime": 648,
+							"body": "{\"first_name\":\"Luis\",\"last_name\":\"Marin\",\"shipping_address\":\"demo\",\"shipping_city\":\"demo city\",\"shipping_state\":\"1\",\"shipping_zipcode\":\"0123456\",\"email\":\"lmari4@elaniin.com\",\"type_user\":1,\"updated_at\":\"2018-11-20 19:22:24\",\"created_at\":\"2018-11-20 19:22:24\",\"id\":6}"
+						},
+						{
+							"id": "e02693c7-62c2-40ef-81bc-e98b641451b6",
+							"name": "CREATE user BUYER",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"disabled": false
+									},
+									{
+										"key": "Api-Token",
+										"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjo0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3NDA3MjgsImV4cCI6MTU0Mjc0NDMyOCwibmJmIjoxNTQyNzQwNzI4LCJqdGkiOiJZTmRVWXJMUmFEUHRJRDBuIn0.FJJiWlFLefFOaZVjeX5iHnaA36yYYVJsv47-34Jdvhg",
+										"disabled": false
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"first_name\"\t\t\t\t: \"Luis\",\n  \"last_name\"\t\t\t\t: \"Marin\",\n  \"shipping_address\"\t\t: \"demo\",\n  \"shipping_city\"\t\t\t: \"demo city\",\n  \"shipping_state\"\t\t\t: \"1\",\n  \"shipping_zipcode\"\t\t: \"0123456\",\n  \"email\"\t\t\t\t\t: \"lmari4@elaniin.com\",\n  \"password\"\t\t\t\t: \"123456\",\n  \"type_user\"               : 2\n  \n}\n"
+								},
+								"url": {
+									"raw": "http://localhost:8090/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"_postman_previewtype": "text",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true",
+									"name": "Access-Control-Allow-Credentials",
+									"description": "Indicates whether or not the response to the request can be exposed when the credentials flag is true. When used as part of a response to a preflight request, this indicates whether or not the actual request can be made using credentials."
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "Content-Type, Authorization, X-Requested-With",
+									"name": "Access-Control-Allow-Headers",
+									"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "POST, GET, OPTIONS, PUT, DELETE",
+									"name": "Access-Control-Allow-Methods",
+									"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*",
+									"name": "Access-Control-Allow-Origin",
+									"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "86400",
+									"name": "Access-Control-Max-Age",
+									"description": "Indicates how long the results of a preflight request can be cached in seconds."
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private",
+									"name": "Cache-Control",
+									"description": "Tells all caching mechanisms from server to client whether they may cache this object. It is measured in seconds"
+								},
+								{
+									"key": "Connection",
+									"value": "close",
+									"name": "Connection",
+									"description": "Options that are desired for the connection"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "The mime type of this content"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 20 Nov 2018 19:22:24 +0000",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 20 Nov 2018 19:22:24 GMT",
+									"name": "Date",
+									"description": "The date and time that the message was sent"
+								},
+								{
+									"key": "Host",
+									"value": "localhost:8090",
+									"name": "Host",
+									"description": "Custom header"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/7.1.8",
+									"name": "X-Powered-By",
+									"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+								}
+							],
+							"cookie": [
+								{
+									"expires": "Mon Jan 18 2038 23:14:07 GMT-0400 (Hora estándar oeste, Sudamérica)",
+									"httpOnly": false,
+									"domain": "localhost",
+									"path": "/APISinListarEndidadFinancieraTST",
+									"secure": false,
+									"value": "YV5hqfJW3CH2r-DPg2__ADwn2_GfmqDl6RTJJNjk.aoshi",
+									"key": "JSESSIONID"
+								}
+							],
+							"responseTime": 648,
+							"body": "{\"first_name\":\"Luis\",\"last_name\":\"Marin\",\"shipping_address\":\"demo\",\"shipping_city\":\"demo city\",\"shipping_state\":\"1\",\"shipping_zipcode\":\"0123456\",\"email\":\"lmari4@elaniin.com\",\"type_user\":1,\"updated_at\":\"2018-11-20 19:22:24\",\"created_at\":\"2018-11-20 19:22:24\",\"id\":6}"
+						}
+					]
 				},
 				{
 					"name": "GET users",
@@ -70,6 +319,72 @@
 							"port": "8090",
 							"path": [
 								"users"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET users buyers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjo0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3NDA3MjgsImV4cCI6MTU0Mjc0NDMyOCwibmJmIjoxNTQyNzQwNzI4LCJqdGkiOiJZTmRVWXJMUmFEUHRJRDBuIn0.FJJiWlFLefFOaZVjeX5iHnaA36yYYVJsv47-34Jdvhg"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8090/users_buyer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users_buyer"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET users sellers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjo0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3NDA3MjgsImV4cCI6MTU0Mjc0NDMyOCwibmJmIjoxNTQyNzQwNzI4LCJqdGkiOiJZTmRVWXJMUmFEUHRJRDBuIn0.FJJiWlFLefFOaZVjeX5iHnaA36yYYVJsv47-34Jdvhg"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8090/users_seller",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users_seller"
 							]
 						},
 						"description": null

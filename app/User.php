@@ -30,6 +30,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'shipping_city',
         'shipping_state',
         'shipping_zipcode',
+        'type_user',
     ];
 
     /**

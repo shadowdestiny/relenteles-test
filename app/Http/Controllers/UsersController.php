@@ -72,7 +72,8 @@ class UsersController extends Controller
                         'shipping_zipcode'          => $data['shipping_zipcode'],
                         'email'                     => $data['email'],
                         'password'                  => Hash::make($data['password']),
-                        'api_token' => ' '
+                        'api_token'                 => 'none',
+                        'type_user' =>              $data['type_user'],
                     ]);
 
                     $user->api_token = JWTAuth::fromUser($user,['email'=>$user->email]);
