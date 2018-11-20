@@ -12,13 +12,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable;
 
+    const SELLER    = 1;
+    const BUYER     = 2;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'api_token',
+        'shipping_address',
+        'shipping_city',
+        'shipping_state',
+        'shipping_zipcode',
     ];
 
     /**
@@ -28,5 +39,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     protected $hidden = [
         'password',
+        'api_token',
+        'remember_token'
     ];
 }

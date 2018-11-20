@@ -23,7 +23,12 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
- $app->withFacades();
+$app->withFacades();
+
+/*$app->withFacades(true, [
+    Tymon\JWTAuth\Facades\JWTAuth::class => 'JWTAuth',
+    Tymon\JWTAuth\Facades\JWTFactory::class => 'JWTFactory'
+]);*/
 
  $app->withEloquent();
 
@@ -71,6 +76,9 @@ $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
+$app->alias('cache', 'Illuminate\Cache\CacheManager');
+$app->alias('auth', 'Illuminate\Auth\AuthManager');
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -82,11 +90,14 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register('Illuminate\Redis\RedisServiceProvider');
-//$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
+//$app->register('Tymon\JWTAuth\Providers\LaravelServiceProvider');
+//$app->register(\Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+//$app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

@@ -1,0 +1,219 @@
+{
+	"info": {
+		"name": "Project Relentless AP",
+		"_postman_id": "3ce13e4f-d27f-6b5d-2a7b-58114a828bdc",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"description": "",
+			"item": [
+				{
+					"name": "CREATE user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjoxLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3MjYzMjMsImV4cCI6MTU0MjczMjk0NywibmJmIjoxNTQyNzI5MzQ3LCJqdGkiOiJpQXRDWUJmaHhiTnJ1TERVIn0.xLRmV6GMXHdCbAnfHUqRk8Zz3AJgf8sShYFwp_wBED0"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\"\t\t\t\t: \"Luis\",\n  \"last_name\"\t\t\t\t: \"Marin\",\n  \"shipping_address\"\t\t: \"demo\",\n  \"shipping_city\"\t\t\t: \"demo city\",\n  \"shipping_state\"\t\t\t: \"1\",\n  \"shipping_zipcode\"\t\t: \"0123456\",\n  \"email\"\t\t\t\t\t: \"lmari4@elaniin.com\",\n  \"password\"\t\t\t\t: \"123456\"\n  \n}"
+						},
+						"url": {
+							"raw": "http://localhost:8090/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjoxLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3MzM4MTgsImV4cCI6MTU0MjczODE3NiwibmJmIjoxNTQyNzM0NTc2LCJqdGkiOiIzeUNkZkVDTDJMWHpHdXNKIn0.Jo-SPb2vYRLzbRDjSTmjNi1OFG3FlbULIAinaQ08-oA"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8090/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "jJHGtk3IoZ84CmKlDz5N206w46yaj6v4mk0vXdTDl5w80iqnk0skp9Jp6NQ3"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\"\t\t\t: \"luis\",\n  \"last_name\"\t\t\t: \"marin\",\n  \"shipping_address\"\t: \"demo\",\n  \"shipping_city\"\t\t: \"1\",\n  \"shipping_zipcode\"\t: \"demo\",\n  \"email\"\t\t\t\t: \"esmeralda@webtraining.mx\",\n  \"password\"\t\t\t: \"esmeralda\",\n  \"name\"\t\t\t\t: \"Esmeralda Rodríguez\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8090/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "GET one user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "jJHGtk3IoZ84CmKlDz5N206w46yaj6v4mk0vXdTDl5w80iqnk0skp9Jp6NQ3"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8085/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluQHJlbGVudGxlc3MuY29tIiwic3ViIjoyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDI3MzgyMzQsImV4cCI6MTU0Mjc0MTgzNCwibmJmIjoxNTQyNzM4MjM0LCJqdGkiOiJQRE9lajlzTUw1UUtvZjRGIn0.Ljp0EUY0dht1BvG67bOoWX9rwJc0qZccsctL0iNU_nM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8090/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users",
+								"1"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "AUTH user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Api-Token",
+								"value": "jJHGtk3IoZ84CmKlDz5N206w46yaj6v4mk0vXdTDl5w80iqnk0skp9Jp6NQ3",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \n  \"email\" : \"admin@relentless.com\",\n  \"password\" : \"12345\"\n  \n}"
+						},
+						"url": {
+							"raw": "http://localhost:8090/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"users",
+								"login"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

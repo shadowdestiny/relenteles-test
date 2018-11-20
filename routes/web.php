@@ -20,6 +20,21 @@ $router->get('/key', function () {
 });
 
 
+// We are using a Middleware that doesn't require configuration
+// https://github.com/vluzrmos/lumen-cors
 $router->group(['middleware' => []], function () use ($router) {
-    $router->get('/get_results', ['uses' => 'EuromillionsDrawController@getResult']);
+    $router->post('/users/login', ['uses' => 'UsersController@getToken']);
+});
+
+$router->group(['middleware' => ['auth']], function () use ($router) {
+// Users
+    $router->get('/users', ['uses' => 'UsersController@getAll']);
+    $router->get('/users_seller', ['uses' => 'UsersController@getSellers']);
+    $router->get('/users_buyer', ['uses' => 'UsersController@getBuyers']);
+    $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
+
+    $router->post('/users', ['uses' => 'UsersController@createUser']);
+
+    $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
+    $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
 });

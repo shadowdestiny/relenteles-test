@@ -11,6 +11,12 @@
 |
 */
 
+use App\User;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+
+
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'first_name'            => $faker->firstName,
@@ -19,7 +25,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'shipping_city'         => $faker->city,
         'shipping_state'        => 1,
         'shipping_zipcode'      => $faker->numberBetween($min = 0, $max = 5),
-        'email'                 => $faker->unique()->email,
-        'password'              => app('hash')->make('12345'),
+        'email'                 => $email = $faker->unique()->email,
+        'password'              => Hash::make('12345'),
+        'type_user'             => User::BUYER,
+        'api_token'             => JWTAuth::fromUser((object)['id'=>1],['email'=>$email]),
     ];
 });
