@@ -24,6 +24,7 @@ $router->get('/key', function () {
 // https://github.com/vluzrmos/lumen-cors
 $router->group(['middleware' => []], function () use ($router) {
     $router->post('/users/login', ['uses' => 'UsersController@getToken']);
+    $router->post('/users', ['uses' => 'UsersController@createUser']);
 });
 
 $router->group(['middleware' => ['auth']], function () use ($router) {
@@ -32,8 +33,6 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/users_seller', ['uses' => 'UsersController@getSellers']);
     $router->get('/users_buyer', ['uses' => 'UsersController@getBuyers']);
     $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
-
-    $router->post('/users', ['uses' => 'UsersController@createUser']);
 
     $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
     $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
