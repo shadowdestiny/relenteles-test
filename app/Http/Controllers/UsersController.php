@@ -64,6 +64,7 @@ class UsersController extends Controller
                 'shipping_zipcode'      => 'required|max:50',
                 'email'                 => 'required|max:100|unique:users',
                 'type_user'             => 'required|integer',
+                'image'                 => 'max:1024',
             ]);
 
             $data = $request->json()->all();
@@ -117,7 +118,7 @@ class UsersController extends Controller
                 'shipping_state'        => 'required|integer',
                 'shipping_zipcode'      => 'required|max:50',
                 'email'                 => 'required|max:100',
-                'type_user'             => 'required|integer',
+                'image'                 => 'max:1024',
             ]);
 
             try {
