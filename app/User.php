@@ -15,6 +15,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     const SELLER    = 1;
     const BUYER     = 2;
 
+    // states
+    const STATES = [
+        "NOT_SENT"      => 0,
+        "ON_THE_WAY"    => 1,
+        "DELIVERED"     => 2,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,6 +38,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'shipping_state',
         'shipping_zipcode',
         'type_user',
+        'image',
     ];
 
     /**

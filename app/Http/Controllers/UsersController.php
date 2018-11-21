@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+//use Intervention\Image\Facades\Image;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -58,7 +59,7 @@ class UsersController extends Controller
 			$user = User::where("email","=",$data['email'])->first();
 			
 			if ($user){
-				return response()->json(['error' => 'User found'], 401, []);
+				return response()->json(['error' => 'User already exists'], 401, []);
 			} else {
 
                 /*if ($data['password'] === $data['confirm_password']){*/
@@ -73,7 +74,8 @@ class UsersController extends Controller
                         'email'                     => $data['email'],
                         'password'                  => Hash::make($data['password']),
                         'api_token'                 => 'none',
-                        'type_user' =>              $data['type_user'],
+                        'image'                     => $data['image'],
+                        'type_user'                 => $data['type_user'],
                     ]);
 
                     $user->api_token = JWTAuth::fromUser($user,['email'=>$user->email]);
@@ -100,23 +102,29 @@ class UsersController extends Controller
 
                 $data = $request->json()->all();
 
-                //if ($data['password'] === $data['confirm_password']){
-                    $user->first_name           = $data['first_name'];
-                    $user->last_name            = $data['last_name'];
-                    $user->shipping_address     = $data['shipping_address'];
-                    $user->shipping_city        = $data['shipping_city'];
-                    $user->shipping_state       = $data['shipping_state'];
-                    $user->shipping_zipcode     = $data['shipping_zipcode'];
-                    $user->last_name            = $data['last_name'];
-                    $user->email                = $data['email'];
-                    $user->password             = Hash::make($data['password']);
-                    $user->api_token            = JWTAuth::refresh($user->api_token);
-                    $user->save();
+                if (User::where('id','<>',$id)->where('email','=',$data['email'])->first()) {
+                    return response()->json(['error' => 'Other user is assigned this email'], 406);
+                } else {
 
-                    return response()->json(new UserResource($user), 200);
-                /*} else {
-                    return response()->json(['error' => 'Password no merge'], 401, []);
-                }*/
+                    //if ($data['password'] === $data['confirm_password']){
+                        $user->first_name           = $data['first_name'];
+                        $user->last_name            = $data['last_name'];
+                        $user->shipping_address     = $data['shipping_address'];
+                        $user->shipping_city        = $data['shipping_city'];
+                        $user->shipping_state       = $data['shipping_state'];
+                        $user->shipping_zipcode     = $data['shipping_zipcode'];
+                        $user->last_name            = $data['last_name'];
+                        $user->email                = $data['email'];
+                        $user->image                = $data['image'];
+                        $user->password             = Hash::make($data['password']);
+                        $user->api_token            = JWTAuth::fromUser($user,['email'=>$user->email]);
+                        $user->save();
+
+                        return response()->json(new UserResource($user), 200);
+                    /*} else {
+                        return response()->json(['error' => 'Password no merge'], 401, []);
+                    }*/
+                }
 
             } catch (ModelNotFoundException $e) {
                 return response()->json(['error' => 'No content'], 406);

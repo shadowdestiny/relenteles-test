@@ -78,6 +78,7 @@ $app->routeMiddleware([
 
 $app->alias('cache', 'Illuminate\Cache\CacheManager');
 $app->alias('auth', 'Illuminate\Auth\AuthManager');
+$app->alias('Image', 'Intervention\Image\Facades\Image');
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,7 @@ $app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
 //$app->register('Tymon\JWTAuth\Providers\LaravelServiceProvider');
 //$app->register(\Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 //$app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
+//$app->register(Intervention\Image\Facades\Image::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
