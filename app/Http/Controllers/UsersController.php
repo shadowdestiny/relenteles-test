@@ -193,6 +193,12 @@ class UsersController extends Controller
         }
     }
 
+    public function logout(Request $request){
+        $token=JWTAuth::getToken();
+        JWTAuth::invalidate($token);
+        return response()->json(['logout' => 'Ok'], 200, []);
+    }
+
     public function getToken(Request $request)
     {
         if ($request->isJson()) {

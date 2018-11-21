@@ -35,6 +35,7 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
     $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
     $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
+    $router->post('/users/logout', ['uses' => 'UsersController@logout']);
 
     // Category
     $router->post('/category', ['uses' => 'CategoryController@createCategory']);
