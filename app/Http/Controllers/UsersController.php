@@ -54,6 +54,18 @@ class UsersController extends Controller
     public function createUser(Request $request)
     {
         if ($request->isJson()) {
+
+            $this->validate($request,[
+                'first_name'            => 'required|max:255',
+                'last_name'             => 'required|max:255',
+                'shipping_address'      => 'required|max:255',
+                'shipping_city'         => 'required|max:255',
+                'shipping_state'        => 'required|integer',
+                'shipping_zipcode'      => 'required|max:50',
+                'email'                 => 'required|max:100|unique:users',
+                'type_user'             => 'required|integer',
+            ]);
+
             $data = $request->json()->all();
 			
 			$user = User::where("email","=",$data['email'])->first();
@@ -96,6 +108,17 @@ class UsersController extends Controller
     public function updateUser(Request $request, $id)
     {
         if ($request->isJson()) {
+
+            $this->validate($request,[
+                'first_name'            => 'required|max:255',
+                'last_name'             => 'required|max:255',
+                'shipping_address'      => 'required|max:255',
+                'shipping_city'         => 'required|max:255',
+                'shipping_state'        => 'required|integer',
+                'shipping_zipcode'      => 'required|max:50',
+                'email'                 => 'required|max:100',
+                'type_user'             => 'required|integer',
+            ]);
 
             try {
                 $user = User::findOrFail($id);
