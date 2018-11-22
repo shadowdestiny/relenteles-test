@@ -37,10 +37,10 @@
 		});
 		
 		$("#send_to_our_server").click(function(){
-			alert("asdfasdfdsaf");
 			$.ajax({
 			  method:"POST",
-			  url: "http://localhost:8090/payment",
+			  //url: "http://localhost:8090/payment",
+			  url: "http://35.202.88.103/payment",
 			  dataType : "json",
 			  headers : {
 					"Content-Type":"application/json",
