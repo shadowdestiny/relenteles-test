@@ -27,7 +27,7 @@ $router->group(['middleware' => []], function () use ($router) {
     $router->post('/users', ['uses' => 'UsersController@createUser']);
 });
 
-$router->group(['middleware' => ['auth']], function () use ($router) {
+$router->group(['middleware' => ['auth_buyer']], function () use ($router) {
     // Users
     $router->get('/users', ['uses' => 'UsersController@getAll']);
     $router->get('/users_seller', ['uses' => 'UsersController@getSellers']);
@@ -43,4 +43,8 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
     $router->put('/category/{id}', ['uses' => 'CategoryController@updateCategory']);
     $router->delete('/category/{id}', ['uses' => 'CategoryController@deleteCategory']);
+
+    // Stripe Subcriptions
+    $router->post('/payment', ['uses' => 'PaymentsController@createSubscription']);
+
 });

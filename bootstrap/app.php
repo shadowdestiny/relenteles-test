@@ -74,6 +74,8 @@ $app->middleware([
 
 $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
+     'auth_buyer' => App\Http\Middleware\AuthenticateBuyer::class,
+     'auth_seller' => App\Http\Middleware\AuthenticateSeller::class,
 ]);
 
 $app->alias('cache', 'Illuminate\Cache\CacheManager');
@@ -96,6 +98,7 @@ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register('Illuminate\Redis\RedisServiceProvider');
 $app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
+$app->register(Laravel\Cashier\CashierServiceProvider::class);
 //$app->register('Tymon\JWTAuth\Providers\LaravelServiceProvider');
 //$app->register(\Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 //$app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);

@@ -1,0 +1,83 @@
+<html>
+
+
+<head>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+	
+	jQuery(function(){
+		var handler = StripeCheckout.configure({
+		  key: 'pk_test_QUvZpBENlLD5dJYzqOAHUZR1',
+		  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
+		  locale: 'auto',
+		  token: function(token) {
+			// You can access the token ID with `token.id`.
+			// Get the token ID to your server-side code for use.
+			$("#section").show();
+			$("#stripe_token").val(token.id);
+
+				console.log(token);
+		  }
+		});
+
+		document.getElementById('customButton').addEventListener('click', function(e) {
+		  // Open Checkout with further options:
+		  handler.open({
+			name: 'ElaniinDigital',
+			description: '2 widgets',
+			amount: 10
+		  });
+		  e.preventDefault();
+		});
+
+		// Close Checkout on page navigation:
+		window.addEventListener('popstate', function() {
+		  handler.close();
+		});
+		
+		$("#send_to_our_server").click(function(){
+			alert("asdfasdfdsaf");
+			$.ajax({
+			  method:"POST",
+			  url: "http://localhost:8090/payment",
+			  dataType : "json",
+			  headers : {
+					"Content-Type":"application/json",
+					"Api-Token": $("#api_token").val()
+			  },
+			  data: JSON.stringify({ 
+				"stripeToken" : $("#stripe_token").val()			
+			  })
+			  //context: document.body
+			}).done(function() {
+			  alert("send data to out server! :-)");
+			});
+		});
+	});
+		
+	</script>
+</head>
+<body>
+
+<button id="customButton">Purchase</button>
+
+<br />
+<div  id="section" style="display:none">
+	
+	<label for="api_token">
+		api token, to our server
+	</label>
+	<input type="text" placeholder="Api-Token" id="api_token">
+	<br />
+	<label for="stripe_token">
+	Stipe Token from api of stripe
+	</label>
+	<input type="text" placeholder="Stripe-Token" id="stripe_token">
+	<br />
+	<button id="send_to_our_server">Submit to we application</button>
+</div>
+
+</body>
+
+</html>

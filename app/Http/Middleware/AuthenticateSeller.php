@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
-class Authenticate
+class AuthenticateSeller
 {
     /**
      * The authentication guard factory instance.
@@ -35,11 +36,12 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        //dd($this->auth->user());
         if ($this->auth->guard($guard)->guest()) {
             return response('Unauthorized.', 401);
+        } else if($this->auth->user()->type_user == User::SELLER){
+            return $next($request);
+        } else {
+            return response('Unauthorized seller.', 401);
         }
-
-        return $next($request);
     }
 }
