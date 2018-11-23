@@ -47,6 +47,7 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 
     // Product
     $router->get('/products', ['uses' => 'ProductController@getAll']);
+    $router->get('/products/{id}', ['uses' => 'ProductController@getProduct']);
 
 });
 
