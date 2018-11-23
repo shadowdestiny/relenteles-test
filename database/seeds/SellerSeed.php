@@ -1,14 +1,13 @@
 <?php
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Faker\Factory as Faker;
-use \Carbon\Carbon as Carbon;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Faker\Factory as Faker;
 
-class UsersSeed extends Seeder
+class SellerSeed extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,33 +16,23 @@ class UsersSeed extends Seeder
      */
     public function run()
     {
-        factory(App\User::class, 3)->create();
-
         $faker = Faker::create();
-
-        $email = 'admin@relentless.com';
 
         DB::table('users')->insert([
             [
-                'first_name'            => 'Admin',
-                'last_name'             => 'Admin',
+                'first_name'            => 'Buyer',
+                'last_name'             => 'Buyer',
                 'shipping_address'      => $faker->address,
                 'shipping_city'         => $faker->city,
-                'shipping_state'        => 1,
+                'shipping_state'        => User::STATES["NOT_SENT"],
                 'shipping_zipcode'      => $faker->numberBetween($min = 0, $max = 5),
-                'email'                 => $email,
+                'email'                 => 'seller@seller.com',
                 'password'              => Hash::make('12345'),
                 'api_token'             => 'none',
-                'image'                 => 'none',
                 'type_user'             => User::SELLER,
                 'created_at'            => Carbon::now(),
-
+                'image'                 => 'none'
             ],
         ]);
-
-        $user = User::where('email','=',$email)->first();
-        $user->api_token = JWTAuth::fromUser($user,['email'=>'admin@relentless.com']);
-        $user->save();
-
     }
 }

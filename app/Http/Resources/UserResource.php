@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'shipping_zipcode'  => $this->shipping_zipcode,
             'api_token'         => $this->api_token,
             'image'             => $this->image,
+            'type_user'         => $this->type_user,
         ];
     }
 }

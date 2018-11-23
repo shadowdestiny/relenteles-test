@@ -38,13 +38,40 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
     $router->post('/users/logout', ['uses' => 'UsersController@logout']);
 
     // Category
-    $router->post('/category', ['uses' => 'CategoryController@createCategory']);
+
     $router->get('/category', ['uses' => 'CategoryController@getAll']);
     $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
-    $router->put('/category/{id}', ['uses' => 'CategoryController@updateCategory']);
-    $router->delete('/category/{id}', ['uses' => 'CategoryController@deleteCategory']);
 
     // Stripe Subcriptions
     $router->post('/payment', ['uses' => 'PaymentsController@createSubscription']);
 
+    // Product
+    $router->get('/products', ['uses' => 'ProductController@getAll']);
+
+});
+
+$router->group(['middleware' => ['auth_seller']], function () use ($router) {
+    // user
+    $router->get('/users', ['uses' => 'UsersController@getAll']);
+    $router->get('/users_seller', ['uses' => 'UsersController@getSellers']);
+    $router->get('/users_buyer', ['uses' => 'UsersController@getBuyers']);
+    $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
+    $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
+    $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
+    $router->post('/users/logout', ['uses' => 'UsersController@logout']);
+
+    // Category
+    $router->get('/category', ['uses' => 'CategoryController@getAll']);
+    $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
+    $router->post('/category', ['uses' => 'CategoryController@createCategory']);
+    $router->put('/category/{id}', ['uses' => 'CategoryController@updateCategory']);
+    $router->delete('/category/{id}', ['uses' => 'CategoryController@deleteCategory']);
+
+    // Product
+    $router->get('/products', ['uses' => 'ProductController@getAll']);
+    $router->get('/products/me', ['uses' => 'ProductController@getMeProducts']);
+    $router->get('/products/{id}', ['uses' => 'ProductController@getProduct']);
+    $router->post('/products', ['uses' => 'ProductController@createProduct']);
+    $router->put('/products/{id}', ['uses' => 'ProductController@updateProduct']);
+    $router->delete('/products/{id}', ['uses' => 'ProductController@deleteProduct']);
 });

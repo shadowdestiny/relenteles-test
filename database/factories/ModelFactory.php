@@ -29,5 +29,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'password'              => Hash::make('12345'),
         'type_user'             => User::BUYER,
         'api_token'             => JWTAuth::fromUser((object)['id'=>1],['email'=>$email]),
+        'image'                 => 'none',
     ];
 });
