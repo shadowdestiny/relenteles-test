@@ -36,9 +36,9 @@ class Authenticate
     public function handle($request, Closure $next, $guard = null)
     {
         //dd($this->auth->user());
-        /*if ($this->auth->guard($guard)->guest()) {
+        if ($this->auth->guard($guard)->guest()) {
             return response('Unauthorized.', 401);
-        }*/
+        }
 
         return $next($request);
     }

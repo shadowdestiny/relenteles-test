@@ -27,23 +27,7 @@ $router->group(['middleware' => []], function () use ($router) {
     $router->post('/users', ['uses' => 'UsersController@createUser']);
 });
 
-$router->group(['middleware' => ['auth_buyer']], function () use ($router) {
-    // Users
-    $router->get('/users', ['uses' => 'UsersController@getAll']);
-    $router->get('/users_seller', ['uses' => 'UsersController@getSellers']);
-    $router->get('/users_buyer', ['uses' => 'UsersController@getBuyers']);
-    $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
-    $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
-    $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
-    $router->post('/users/logout', ['uses' => 'UsersController@logout']);
-
-    // Category
-
-    $router->get('/category', ['uses' => 'CategoryController@getAll']);
-    $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
-
-    // Stripe Subcriptions
-    $router->post('/payment', ['uses' => 'PaymentsController@createSubscription']);
+$router->group(['middleware' => ['auth']], function () use ($router) {
 
     // Product
     $router->get('/products', ['uses' => 'ProductController@getAll']);
@@ -51,34 +35,43 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
     $router->get('/products_by_category/{category_id}', ['uses' => 'ProductController@getProductsByCategory']);
     $router->post('/products_find', ['uses' => 'ProductController@getProductsFind']);
 
-});
-
-$router->group(['middleware' => ['auth_seller']], function () use ($router) {
-    // user
-    $router->get('/users', ['uses' => 'UsersController@getAll']);
+    // Users
+    $router->post('/users/logout', ['uses' => 'UsersController@logout']);
     $router->get('/users_seller', ['uses' => 'UsersController@getSellers']);
+    $router->get('/users', ['uses' => 'UsersController@getAll']);
     $router->get('/users_buyer', ['uses' => 'UsersController@getBuyers']);
     $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
     $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
     $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
-    $router->post('/users/logout', ['uses' => 'UsersController@logout']);
 
     // Category
     $router->get('/category', ['uses' => 'CategoryController@getAll']);
     $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
+
+});
+
+$router->group(['middleware' => ['auth_buyer']], function () use ($router) {
+
+    // Stripe Subcriptions
+    $router->post('/payment', ['uses' => 'PaymentsController@createSubscription']);
+
+    // Favorite
+    $router->post('/favorite', ['uses' => 'FavoriteController@createFavorite']);
+    $router->get('/favorite', ['uses' => 'FavoriteController@getAll']);
+
+});
+
+$router->group(['middleware' => ['auth_seller']], function () use ($router) {
+
+    // Category
     $router->post('/category', ['uses' => 'CategoryController@createCategory']);
     $router->put('/category/{id}', ['uses' => 'CategoryController@updateCategory']);
     $router->delete('/category/{id}', ['uses' => 'CategoryController@deleteCategory']);
 
     // Product
-    $router->get('/products', ['uses' => 'ProductController@getAll']);
-    $router->get('/products/{id}', ['uses' => 'ProductController@getProduct']);
     $router->post('/products', ['uses' => 'ProductController@createProduct']);
     $router->put('/products/{id}', ['uses' => 'ProductController@updateProduct']);
     $router->delete('/products/{id}', ['uses' => 'ProductController@deleteProduct']);
     $router->get('/products_me', ['uses' => 'ProductController@getMeProducts']);
-    $router->get('/products_by_category/{category_id}', ['uses' => 'ProductController@getProductsByCategory']);
-    $router->post('/products_find', ['uses' => 'ProductController@getProductsFind']);
-
 
 });
