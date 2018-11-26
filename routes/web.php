@@ -48,6 +48,8 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
     // Product
     $router->get('/products', ['uses' => 'ProductController@getAll']);
     $router->get('/products/{id}', ['uses' => 'ProductController@getProduct']);
+    $router->get('/products_by_category/{category_id}', ['uses' => 'ProductController@getProductsByCategory']);
+    $router->post('/products_find', ['uses' => 'ProductController@getProductsFind']);
 
 });
 
@@ -70,9 +72,13 @@ $router->group(['middleware' => ['auth_seller']], function () use ($router) {
 
     // Product
     $router->get('/products', ['uses' => 'ProductController@getAll']);
-    $router->get('/products/me', ['uses' => 'ProductController@getMeProducts']);
     $router->get('/products/{id}', ['uses' => 'ProductController@getProduct']);
     $router->post('/products', ['uses' => 'ProductController@createProduct']);
     $router->put('/products/{id}', ['uses' => 'ProductController@updateProduct']);
     $router->delete('/products/{id}', ['uses' => 'ProductController@deleteProduct']);
+    $router->get('/products_me', ['uses' => 'ProductController@getMeProducts']);
+    $router->get('/products_by_category/{category_id}', ['uses' => 'ProductController@getProductsByCategory']);
+    $router->post('/products_find', ['uses' => 'ProductController@getProductsFind']);
+
+
 });

@@ -37,6 +37,36 @@ class ProductController extends Controller
 
             $product = Product::where('seller_id','=',$user->id)->get();
 
+            if ($product)
+                return response()->json(ProductResource::collection($product), 200);
+            else {
+                return response()->json(['error' => 'Not found'], 401, []);
+            }
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401, []);
+        }
+    }
+
+    public function getProductsByCategory(Request $request,$category_id)
+    {
+        if ($request->isJson()) {
+
+            $product = Product::where('category_id','=',$category_id)
+                ->get();
+
+            return response()->json(ProductResource::collection($product), 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401, []);
+        }
+    }
+
+    public function getProductsFind(Request $request)
+    {
+        if ($request->isJson()) {
+
+            $product = Product::where('name','like','%'.$request->input('string_find').'%')
+                ->get();
+
             return response()->json(ProductResource::collection($product), 200);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401, []);
