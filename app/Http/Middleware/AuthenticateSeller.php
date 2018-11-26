@@ -36,12 +36,13 @@ class AuthenticateSeller
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guard($guard)->guest()) {
+        /*if ($this->auth->guard($guard)->guest()) {
             return response('Unauthorized.', 401);
         } else if($this->auth->user()->type_user == User::SELLER){
             return $next($request);
         } else {
             return response('Unauthorized seller.', 401);
-        }
+        }*/
+        return $next($request);
     }
 }
