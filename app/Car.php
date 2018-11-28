@@ -30,11 +30,11 @@ class Car extends Model
 
     ];
 
-    public function user(){
+    public function users(){
         return $this->belongsTo(User::class,'user_id','id');
     }
 
     public function products(){
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class,'product_id','id');
     }
 }

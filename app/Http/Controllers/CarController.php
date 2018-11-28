@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Favorite;
+use App\Car;
+use App\Http\Resources\CarResource;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
-class FavoriteController extends Controller
+class CarController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -25,14 +26,21 @@ class FavoriteController extends Controller
 
             $user = Auth::user();
 
-            return Favorite::where("user_id","=",$user->id)
+            $cars = Car::where("user_id","=",$user->id)
                 ->get();
+
+            if($cars){
+                return CarResource::collection($cars);
+            } else {
+                return response()->json(['error' => 'Not found'], 406, []);
+            }
+
         } else {
             return response()->json(['error' => 'Unauthorized'], 401, []);
         }
     }
 
-    public function createFavorite(Request $request)
+    public function createCar(Request $request)
     {
 
         $this->validate($request,[
@@ -43,25 +51,25 @@ class FavoriteController extends Controller
 
             $user = Auth::user();
 
-            $favorite = Favorite::where("product_id","=",$request["product_id"])
-                ->where("user_id","=",$user->id)->get();
+            $card = Car::where("product_id","=",$request["product_id"])
+                ->where("user_id","=",$user->id)
+                ->first();
 
-            if (!$favorite){
-                $favorite = new Favorite();
-                $favorite->product_id           = $request["product_id"];
-                $favorite->user_id              = $user->id;
-                $favorite->save();
-                return response()->json($favorite, 201);
+            if(!$card){
+                $car = new Car();
+                $car->product_id           = $request['product_id'];
+                $car->user_id              = $user->id;
+                $car->save();
+                return response()->json(new CarResource($car), 201);
             } else {
                 return response()->json(['error' => 'Duplicate row or not found'], 401, []);
             }
-
         } else {
             return response()->json(['error' => 'Unauthorized'], 401, []);
         }
     }
 
-    public function deleteFavorite(Request $request, $id)
+    public function deleteCar(Request $request, $id)
     {
         if ($request->isJson()) {
 
@@ -69,13 +77,13 @@ class FavoriteController extends Controller
 
                 $user = Auth::user();
 
-                $favorite = Favorite::where('id','=',$id)
+                $car = Car::where('id','=',$id)
                     ->where('user_id','=',$user->id)->first();
                 ;
 
-                if ($favorite){
-                    $favorite->delete();
-                    return response()->json($favorite, 200);
+                if ($car){
+                    $car->delete();
+                    return response()->json(new CarResource($car), 200);
                 } else {
                     return response()->json(['error' => 'Not found'], 406);
                 }

@@ -58,6 +58,12 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
     // Favorite
     $router->post('/favorite', ['uses' => 'FavoriteController@createFavorite']);
     $router->get('/favorite', ['uses' => 'FavoriteController@getAll']);
+    $router->delete('/favorite/{id}', ['uses' => 'FavoriteController@deleteFavorite']);
+
+    // Car
+    $router->post('/car', ['uses' => 'CarController@createCar']);
+    $router->get('/car', ['uses' => 'CarController@getAll']);
+    $router->delete('/car/{id}', ['uses' => 'CarController@deleteCar']);
 
 });
 
