@@ -29,15 +29,19 @@ class CategoryController extends Controller
     {
 
         $this->validate($request,[
-            'name' => 'required|max:50|unique:categories',
-            'description' => 'required|max:200',
+            'name'              => 'required|max:50|unique:categories',
+            'description'       => 'required|max:200',
+            'image'             => 'required|max:1024',
+            'background_image'  => 'required|max:1024',
         ]);
 
         if ($request->isJson()) {
             $data = $request->json()->all();
             $category = new Category();
-            $category->name         = $data['name'];
-            $category->description  = $data['description'];
+            $category->name                     = $data['name'];
+            $category->description              = $data['description'];
+            $category->image                    = $data['image'];
+            $category->background_image         = $data['background_image'];
             $category->save();
 
             return response()->json($category, 201);
@@ -52,8 +56,10 @@ class CategoryController extends Controller
         if ($request->isJson()) {
 
             $this->validate($request,[
-                'name' => 'required|max:50',
-                'description' => 'required|max:200',
+                'name'              => 'required|max:50',
+                'description'       => 'required|max:200',
+                'image'             => 'required|max:1024',
+                'background_image'  => 'required|max:1024',
             ]);
 
             try {
@@ -65,8 +71,10 @@ class CategoryController extends Controller
                     return response()->json(['error' => 'Other category is assigned this name'], 406);
                 } else {
 
-                        $category->name         = $data["name"];
-                        $category->description  = $data["description"];
+                        $category->name                     = $data["name"];
+                        $category->description              = $data["description"];
+                        $category->image                    = $data['image'];
+                        $category->background_image         = $data['background_image'];
 
                         $category->save();
 
@@ -85,15 +93,12 @@ class CategoryController extends Controller
 
     public function getCategory($id)
     {
-
             try {
                 $category = Category::find($id);
                 return response()->json($category, 200);
             } catch (ModelNotFoundException $e) {
                 return response()->json(['error' => 'No content'], 406);
             }
-
-
     }
 
     public function deleteCategory($id)

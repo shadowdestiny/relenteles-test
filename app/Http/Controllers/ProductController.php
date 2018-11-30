@@ -52,6 +52,16 @@ class ProductController extends Controller
 
     }
 
+    public function getProductsBySeller($seller_id)
+    {
+
+        $product = Product::where('seller_id','=',$seller_id)
+            ->get();
+
+        return response()->json(ProductResource::collection($product), 200);
+
+    }
+
     public function getProductsFind(Request $request)
     {
         if ($request->isJson()) {

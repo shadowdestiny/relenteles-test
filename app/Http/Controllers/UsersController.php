@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -186,11 +187,13 @@ class UsersController extends Controller
         if ($request->isJson()) {
 
             try {
+                config()->set('jwt.ttl', 60*60*7);
                 $data = $request->json()->all();
                 $user = User::where('email', $data['email'])->first();
 
                 if ($user){
-                    $user->api_token = JWTAuth::fromUser($user,['email'=>$user->email]);
+
+                    $user->api_token = JWTAuth::fromUser($user,['email'=>$user->email,'exp' => Carbon::now()->addDays(7)->timestamp]);
                     $user->save();
 
                     if ($user && Hash::check($data['password'], $user->password)) {

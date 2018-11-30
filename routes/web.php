@@ -33,6 +33,7 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/products', ['uses' => 'ProductController@getAll']);
     $router->get('/products/{id}', ['uses' => 'ProductController@getProduct']);
     $router->get('/products_by_category/{category_id}', ['uses' => 'ProductController@getProductsByCategory']);
+    $router->get('/products_by_seller/{seller_id}', ['uses' => 'ProductController@getProductsBySeller']);
     $router->post('/products_find', ['uses' => 'ProductController@getProductsFind']);
 
     // Users

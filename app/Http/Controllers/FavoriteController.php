@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Favorite;
+use App\Http\Resources\FavoriteResource;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +25,10 @@ class FavoriteController extends Controller
     {
             $user = Auth::user();
 
-            return Favorite::where("user_id","=",$user->id)
+            $favorite = Favorite::where("user_id","=",$user->id)
                 ->get();
+
+            return FavoriteResource::collection($favorite);
     }
 
     public function createFavorite(Request $request)
@@ -38,17 +42,24 @@ class FavoriteController extends Controller
 
             $user = Auth::user();
 
-            $favorite = Favorite::where("product_id","=",$request["product_id"])
-                ->where("user_id","=",$user->id)->get();
+            $product = Product::find($request["product_id"]);
 
-            if (!$favorite){
-                $favorite = new Favorite();
-                $favorite->product_id           = $request["product_id"];
-                $favorite->user_id              = $user->id;
-                $favorite->save();
-                return response()->json($favorite, 201);
+            if ($product){
+                $favorite = Favorite::where("product_id","=",$request["product_id"])
+                    ->where("user_id","=",$user->id)->first();
+
+                if (!$favorite){
+                    $favorite = new Favorite();
+                    $favorite->product_id           = $request["product_id"];
+                    $favorite->user_id              = $user->id;
+                    $favorite->save();
+
+                    return response()->json(new FavoriteResource($favorite), 201);
+                } else {
+                    return response()->json(['error' => 'Duplicate row'], 406, []);
+                }
             } else {
-                return response()->json(['error' => 'Duplicate row or not found'], 401, []);
+                return response()->json(['error' => 'Not Found product'], 406, []);
             }
 
         } else {
