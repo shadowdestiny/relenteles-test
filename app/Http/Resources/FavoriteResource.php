@@ -18,10 +18,10 @@ class FavoriteResource extends JsonResource
     {
 
         return [
-            'id'                => $this->id,
-            'product_id'        => $this->product_id,
-            'user_id'           => $this->user_id,
-            'product'           => new ProductResource($this->products),
+            'id'                    => $this->id,
+            'product_id'            => $this->product_id,
+            'user_id'               => $this->user_id,
+            'product'               => new ProductResource($this->products),
         ];
     }
 }
