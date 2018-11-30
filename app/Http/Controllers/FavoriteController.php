@@ -19,17 +19,12 @@ class FavoriteController extends Controller
         //
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
-        if ($request->isJson()) {
-
             $user = Auth::user();
 
             return Favorite::where("user_id","=",$user->id)
                 ->get();
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
     }
 
     public function createFavorite(Request $request)
@@ -61,9 +56,8 @@ class FavoriteController extends Controller
         }
     }
 
-    public function deleteFavorite(Request $request, $id)
+    public function deleteFavorite($id)
     {
-        if ($request->isJson()) {
 
             try {
 
@@ -84,9 +78,6 @@ class FavoriteController extends Controller
                 return response()->json(['error' => 'No content'], 406);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
     }
 
 }

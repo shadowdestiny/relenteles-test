@@ -21,18 +21,15 @@ class ProductController extends Controller
         //
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
-        if ($request->isJson()) {
+
             return response()->json(ProductResource::collection(Product::all()), 200);
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+
     }
 
-    public function getMeProducts(Request $request)
+    public function getMeProducts()
     {
-        if ($request->isJson()) {
             $user = Auth::user();
 
             $product = Product::where('seller_id','=',$user->id)->get();
@@ -42,22 +39,17 @@ class ProductController extends Controller
             else {
                 return response()->json(['error' => 'Not found'], 401, []);
             }
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+
     }
 
-    public function getProductsByCategory(Request $request,$category_id)
+    public function getProductsByCategory($category_id)
     {
-        if ($request->isJson()) {
 
-            $product = Product::where('category_id','=',$category_id)
-                ->get();
+        $product = Product::where('category_id','=',$category_id)
+            ->get();
 
-            return response()->json(ProductResource::collection($product), 200);
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+        return response()->json(ProductResource::collection($product), 200);
+
     }
 
     public function getProductsFind(Request $request)
@@ -148,9 +140,9 @@ class ProductController extends Controller
         }
     }
 
-    public function getProduct(Request $request, $id)
+    public function getProduct($id)
     {
-        if ($request->isJson()) {
+
 
             try {
                 $product = Product::find($id);
@@ -162,15 +154,12 @@ class ProductController extends Controller
                 return response()->json(['error' => 'No content'], 406);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+
 
     }
 
-    public function deleteProduct(Request $request, $id)
+    public function deleteProduct($id)
     {
-        if ($request->isJson()) {
 
             try {
                 $user = Auth::user();
@@ -188,9 +177,6 @@ class ProductController extends Controller
                 return response()->json(['error' => 'No content'], 406);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
     }
 
 }

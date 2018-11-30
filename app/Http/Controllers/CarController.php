@@ -20,9 +20,8 @@ class CarController extends Controller
         //
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
-        if ($request->isJson()) {
 
             $user = Auth::user();
 
@@ -35,9 +34,6 @@ class CarController extends Controller
                 return response()->json(['error' => 'Not found'], 406, []);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
     }
 
     public function createCar(Request $request)
@@ -69,9 +65,9 @@ class CarController extends Controller
         }
     }
 
-    public function deleteCar(Request $request, $id)
+    public function deleteCar( $id)
     {
-        if ($request->isJson()) {
+
 
             try {
 
@@ -92,9 +88,7 @@ class CarController extends Controller
                 return response()->json(['error' => 'No content'], 406);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+
     }
 
 }

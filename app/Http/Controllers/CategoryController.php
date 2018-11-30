@@ -20,13 +20,9 @@ class CategoryController extends Controller
         //
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
-        if ($request->isJson()) {
-            return Category::all();
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+         return Category::all();
     }
 
     public function createCategory(Request $request)
@@ -87,9 +83,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function getCategory(Request $request, $id)
+    public function getCategory($id)
     {
-        if ($request->isJson()) {
 
             try {
                 $category = Category::find($id);
@@ -98,28 +93,21 @@ class CategoryController extends Controller
                 return response()->json(['error' => 'No content'], 406);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
 
     }
 
-    public function deleteCategory(Request $request, $id)
+    public function deleteCategory($id)
     {
-        if ($request->isJson()) {
 
-            try {
-                $category = Category::findOrFail($id);
-                $category->delete();
+        try {
+            $category = Category::findOrFail($id);
+            $category->delete();
 
-                return response()->json($category, 200);
-            } catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'No content'], 406);
-            }
-
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
+            return response()->json($category, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'No content'], 406);
         }
+
     }
 
 }

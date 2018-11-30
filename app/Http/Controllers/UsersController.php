@@ -24,31 +24,21 @@ class UsersController extends Controller
         //
     }
 
-    public function getAll(Request $request)
+    public function getAll()
     {
-        if ($request->isJson()) {
-            return User::all();
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+         return User::all();
     }
 
-    public function getSellers(Request $request)
+    public function getSellers()
     {
-        if ($request->isJson()) {
             return User::where('type_user','=',User::SELLER)->get();
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
     }
 
     public function getBuyers(Request $request)
     {
-        if ($request->isJson()) {
+
             return User::where('type_user','=',User::BUYER)->get();
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
+
     }
 
     public function createUser(Request $request)
@@ -161,7 +151,6 @@ class UsersController extends Controller
 
     public function getUser(Request $request, $id)
     {
-        if ($request->isJson()) {
 
             try {
                 $user = User::find($id);
@@ -170,28 +159,20 @@ class UsersController extends Controller
                 return response()->json(['error' => 'No content'], 406);
             }
 
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
-        }
-
     }
 
-    public function deleteUser(Request $request, $id)
+    public function deleteUser( $id)
     {
-        if ($request->isJson()) {
 
-            try {
-                $user = User::findOrFail($id);
-                $user->delete();
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
 
-                return response()->json($user, 200);
-            } catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'No content'], 406);
-            }
-
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
+            return response()->json($user, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'No content'], 406);
         }
+
     }
 
     public function logout(Request $request){
