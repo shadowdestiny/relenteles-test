@@ -66,8 +66,28 @@ class ProductController extends Controller
     {
         if ($request->isJson()) {
 
-            $product = Product::where('name','like','%'.$request->input('string_find').'%')
-                ->get();
+            $product = Product::where('name','like','%'.$request->input('string_find').'%');
+
+
+
+            if (strlen($request["category_id"]) > 0)
+                $product->where('category_id','=',$request->input('string_find'));
+
+            if (strlen($request["by_price"]) > 0) {
+                if ($request["by_price"] === "price_high_low")
+                    $product->orderBy("price", "asc");
+                else if ($request["by_price"] === "price_low_high")
+                    $product->orderBy("price", "desc");
+            }
+
+            if (strlen($request["by_rating"]) > 0){
+                if($request["rating_high_low"])
+                    $product->where('1','=','1');
+                else if($request["rating_low_high"])
+                    $product->where('1','=','1');
+            }
+
+            $product = $product->get();
 
             return response()->json(ProductResource::collection($product), 200);
         } else {
