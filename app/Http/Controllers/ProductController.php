@@ -71,7 +71,7 @@ class ProductController extends Controller
 
 
             if (strlen($request["category_id"]) > 0)
-                $product->where('category_id','=',$request->input('string_find'));
+                $product->where('category_id','=',$request->input('category_id'));
 
             if (strlen($request["by_price"]) > 0) {
                 if ($request["by_price"] === "price_high_low")
