@@ -53,6 +53,10 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 
 $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 
+    // products
+    $router->get('/products_of_buyer', ['uses' => 'ProductController@getByBuyer']);
+    $router->post('/products_of_buyer_find', ['uses' => 'ProductController@getProductsFindByBuyer']);
+
     // Stripe Subcriptions
     $router->post('/payment', ['uses' => 'PaymentsController@createSubscription']);
 

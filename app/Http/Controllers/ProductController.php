@@ -6,6 +6,7 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductJoinFavoriteResource;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -25,6 +26,30 @@ class ProductController extends Controller
     {
 
             return response()->json(ProductResource::collection(Product::all()), 200);
+
+    }
+
+    public function getByBuyer()
+    {
+        $user = Auth::user();
+        $products = Product::leftJoin("favorites",function($join) use ($user) {
+            $join->on("favorites.product_id","=","products.id");
+            $join->where('favorites.user_id','=',$user->id) ;
+        })
+            ->select([
+               'products.id',
+               'products.name',
+               'products.description',
+               'products.price',
+               'products.category_id',
+               'products.image',
+               'products.seller_id',
+               'products.created_at',
+               'products.updated_at',
+               'favorites.id as favorite_id',
+            ])->get();
+
+        return response()->json(ProductJoinFavoriteResource::collection($products), 200);
 
     }
 
@@ -66,8 +91,9 @@ class ProductController extends Controller
     {
         if ($request->isJson()) {
 
-            $product = Product::where('name','like','%'.$request->input('string_find').'%');
-
+            $product = Product::where('name','like','%'.$request->input('string_find').'%')
+            //    ->
+            ;
 
 
             if (strlen($request["category_id"]) > 0)
@@ -90,6 +116,54 @@ class ProductController extends Controller
             $product = $product->get();
 
             return response()->json(ProductResource::collection($product), 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401, []);
+        }
+    }
+    public function getProductsFindByBuyer(Request $request) {
+
+        if ($request->isJson()) {
+
+            $user = Auth::user();
+
+            $product = Product::leftJoin("favorites",function($join) use ($user) {
+                $join->on("favorites.product_id","=","products.id");
+                $join->where('favorites.user_id','=',$user->id) ;
+            })
+                ->where('name','like','%'.$request->input('string_find').'%')
+            ->select([
+                    'products.id',
+                    'products.name',
+                    'products.description',
+                    'products.price',
+                    'products.category_id',
+                    'products.image',
+                    'products.seller_id',
+                    'products.created_at',
+                    'products.updated_at',
+                    'favorites.id as favorite_id',
+            ]);
+
+            if (strlen($request["category_id"]) > 0)
+                $product->where('category_id','=',$request->input('category_id'));
+
+            if (strlen($request["by_price"]) > 0) {
+                if ($request["by_price"] === "price_high_low")
+                    $product->orderBy("price", "asc");
+                else if ($request["by_price"] === "price_low_high")
+                    $product->orderBy("price", "desc");
+            }
+
+            if (strlen($request["by_rating"]) > 0){
+                if($request["rating_high_low"])
+                    $product->where('1','=','1');
+                else if($request["rating_low_high"])
+                    $product->where('1','=','1');
+            }
+
+            $product = $product->get();
+
+            return response()->json(ProductJoinFavoriteResource::collection($product), 200);
         } else {
             return response()->json(['error' => 'Unauthorized'], 401, []);
         }

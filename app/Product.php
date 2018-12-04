@@ -37,4 +37,8 @@ class Product extends Model
     public function seller(){
         return $this->belongsTo(User::class,'seller_id','id');
     }
+
+    public function category(){
+        return $this->hasMany(Category::class,'id','category_id');
+    }
 }
