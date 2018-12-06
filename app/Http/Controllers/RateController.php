@@ -41,6 +41,13 @@ class RateController extends Controller
         return $rate;
     }
 
+    public function getOneRate($id)
+    {
+        $rate = Rate::find($id);
+
+        return $rate;
+    }
+
     public function createRating(Request $request)
     {
 

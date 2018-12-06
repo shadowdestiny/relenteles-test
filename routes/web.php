@@ -49,6 +49,9 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/category', ['uses' => 'CategoryController@getAll']);
     $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
 
+    // Rate
+    $router->get('/rate/{id}', ['uses' => 'RateController@getOneRate']);
+
 });
 
 $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
