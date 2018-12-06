@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Favorite;
 use App\Http\Resources\FavoriteResource;
 use App\Product;
+use App\Rate;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +47,7 @@ class RateController extends Controller
         $this->validate($request,[
             'product_id'    => 'required|integer',
             'rate'          => 'required|integer',
-            'review'        => 'required|integer',
+            'review'        => 'required|max:512',
         ]);
 
         if ($request->isJson()) {
@@ -56,16 +57,18 @@ class RateController extends Controller
             $product = Product::find($request["product_id"]);
 
             if ($product){
-                $favorite = Favorite::where("product_id","=",$request["product_id"])
+                $rate = Rate::where("product_id","=",$request["product_id"])
                     ->where("user_id","=",$user->id)->first();
 
-                if (!$favorite){
-                    $favorite = new Favorite();
-                    $favorite->product_id           = $request["product_id"];
-                    $favorite->user_id              = $user->id;
-                    $favorite->save();
+                if (!$rate){
+                    $rate = new Rate();
+                    $rate->product_id           = $request["product_id"];
+                    $rate->user_id              = $user->id;
+                    $rate->review               = $request["review"];
+                    $rate->rate                 = $request["rate"];
+                    $rate->save();
 
-                    return response()->json(new FavoriteResource($favorite), 201);
+                    return response()->json($rate, 201);
                 } else {
                     return response()->json(['error' => 'Duplicate row'], 406, []);
                 }

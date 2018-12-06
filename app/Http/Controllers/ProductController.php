@@ -24,9 +24,7 @@ class ProductController extends Controller
 
     public function getAll()
     {
-
-            return response()->json(ProductResource::collection(Product::all()), 200);
-
+         return response()->json(ProductResource::collection(Product::all()), 200);
     }
 
     public function getByBuyer()
@@ -36,18 +34,23 @@ class ProductController extends Controller
             $join->on("favorites.product_id","=","products.id");
             $join->where('favorites.user_id','=',$user->id) ;
         })
-            ->select([
-               'products.id',
-               'products.name',
-               'products.description',
-               'products.price',
-               'products.category_id',
-               'products.image',
-               'products.seller_id',
-               'products.created_at',
-               'products.updated_at',
-               'favorites.id as favorite_id',
-            ])->get();
+        ->leftJoin("rates",function($join) use ($user) {
+            $join->on("rates.product_id","=","products.id");
+            $join->where('rates.user_id','=',$user->id) ;
+        })
+        ->select([
+            'products.id',
+            'products.name',
+            'products.description',
+            'products.price',
+            'products.category_id',
+            'products.image',
+            'products.seller_id',
+            'products.created_at',
+            'products.updated_at',
+            'favorites.id as favorite_id',
+            'rates.id as rate_id',
+        ])->get();
 
         return response()->json(ProductJoinFavoriteResource::collection($products), 200);
 
@@ -95,7 +98,6 @@ class ProductController extends Controller
             //    ->
             ;
 
-
             if (strlen($request["category_id"]) > 0)
                 $product->where('category_id','=',$request->input('category_id'));
 
@@ -130,18 +132,21 @@ class ProductController extends Controller
                 $join->on("favorites.product_id","=","products.id");
                 $join->where('favorites.user_id','=',$user->id) ;
             })
-                ->where('name','like','%'.$request->input('string_find').'%')
+            ->leftJoin("rates",function($join) use ($user) {
+                $join->on("rates.product_id","=","products.id");
+            })
+            ->where('name','like','%'.$request->input('string_find').'%')
             ->select([
-                    'products.id',
-                    'products.name',
-                    'products.description',
-                    'products.price',
-                    'products.category_id',
-                    'products.image',
-                    'products.seller_id',
-                    'products.created_at',
-                    'products.updated_at',
-                    'favorites.id as favorite_id',
+                'products.id',
+                'products.name',
+                'products.description',
+                'products.price',
+                'products.category_id',
+                'products.image',
+                'products.seller_id',
+                'products.created_at',
+                'products.updated_at',
+                'favorites.id as favorite_id',
             ]);
 
             if (strlen($request["category_id"]) > 0)
@@ -155,10 +160,10 @@ class ProductController extends Controller
             }
 
             if (strlen($request["by_rating"]) > 0){
-                if($request["rating_high_low"])
-                    $product->where('1','=','1');
-                else if($request["rating_low_high"])
-                    $product->where('1','=','1');
+                if($request["by_rating"] === "rating_high_low")
+                    $product->orderBy('rates.rate','asc');
+                else if($request["by_rating"] === "rating_low_high")
+                    $product->orderBy('rates.rate','desc');
             }
 
             $product = $product->get();

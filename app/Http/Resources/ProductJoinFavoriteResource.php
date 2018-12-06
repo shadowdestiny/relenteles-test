@@ -2,9 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Category;
-use App\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ProductJoinFavoriteResource extends JsonResource
 {
@@ -17,6 +16,7 @@ class ProductJoinFavoriteResource extends JsonResource
      */
     public function toArray($request)
     {
+        $user = Auth::user();
         return [
             'id'                => $this->id,
             'name'              => $this->name,
@@ -25,6 +25,7 @@ class ProductJoinFavoriteResource extends JsonResource
             'category'          => $this->category,
             'image'             => $this->image,
             'seller'            => $this->seller,
+            'rate'              => $this->rates->where("user_id","=",$user->id)->first(),
             'is_favorite'       => $this["favorite_id"] === null ? false : true,
             'created_at'        => $this->created_at,
             'updated_at'        => $this->updated_at,
