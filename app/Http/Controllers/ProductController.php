@@ -94,9 +94,7 @@ class ProductController extends Controller
     {
         if ($request->isJson()) {
 
-            $product = Product::where('name','like','%'.$request->input('string_find').'%')
-            //    ->
-            ;
+            $product = Product::where('name','like','%'.$request->input('string_find').'%');
 
             if (strlen($request["category_id"]) > 0)
                 $product->where('category_id','=',$request->input('category_id'));

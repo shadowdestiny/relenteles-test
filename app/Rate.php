@@ -35,6 +35,10 @@ class Rate extends Model
         return $this->belongsTo(User::class,'user_id','id');
     }
 
+    public function users(){
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+
     public function products(){
         return $this->belongsTo(Product::class,'product_id','id');
     }
