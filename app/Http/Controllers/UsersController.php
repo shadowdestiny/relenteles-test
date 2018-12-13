@@ -53,6 +53,10 @@ class UsersController extends Controller
                 'shipping_city'         => 'required|max:255',
                 'shipping_state'        => 'required|integer',
                 'shipping_zipcode'      => 'required|max:50',
+                'youtube_url'           => 'max:512',
+                'spotify_url'           => 'max:512',
+                'podcast_url'           => 'max:512',
+                'itunes_url'           => 'max:512',
                 'email'                 => 'required|max:100|unique:users',
                 'type_user'             => 'required|integer',
                 'image'                 => 'max:1024',
@@ -75,6 +79,10 @@ class UsersController extends Controller
                         'shipping_city'             => $data['shipping_city'],
                         'shipping_state'            => $data['shipping_state'],
                         'shipping_zipcode'          => $data['shipping_zipcode'],
+                        'youtube_url'               => $data['youtube_url'],
+                        'spotify_url'               => $data['spotify_url'],
+                        'podcast_url'               => $data['podcast_url'],
+                        'itunes_url'                => $data['itunes_url'],
                         'email'                     => $data['email'],
                         'password'                  => Hash::make($data['password']),
                         'api_token'                 => 'none',
@@ -109,6 +117,10 @@ class UsersController extends Controller
                 'shipping_state'        => 'required|integer',
                 'shipping_zipcode'      => 'required|max:50',
                 'email'                 => 'required|max:100',
+                'youtube_url'           => 'max:512',
+                'spotify_url'           => 'max:512',
+                'podcast_url'           => 'max:512',
+                'itunes_url'            => 'max:512',
                 'image'                 => 'max:1024',
             ]);
 
@@ -129,6 +141,10 @@ class UsersController extends Controller
                         $user->shipping_state       = $data['shipping_state'];
                         $user->shipping_zipcode     = $data['shipping_zipcode'];
                         $user->last_name            = $data['last_name'];
+                        $user->youtube_url          = $data['youtube_url'];
+                        $user->spotify_url          = $data['spotify_url'];
+                        $user->podcast_url          = $data['podcast_url'];
+                        $user->itunes_url           = $data['itunes_url'];
                         $user->email                = $data['email'];
                         $user->image                = $data['image'];
                         $user->password             = Hash::make($data['password']);

@@ -40,6 +40,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'shipping_state',
         'shipping_zipcode',
         'type_user',
+        'youtube_url',
+        'spotify_url',
+        'podcast_url',
+        'itunes_url',
         'image',
     ];
 
