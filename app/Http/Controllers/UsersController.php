@@ -70,7 +70,7 @@ class UsersController extends Controller
 				return response()->json(['error' => 'User already exists'], 401, []);
 			} else {
 
-                /*if ($data['password'] === $data['confirm_password']){*/
+                if ($data['type_user'] === 1)
 
                     $user = User::create([
                         'first_name'                => $data['first_name'],
@@ -89,16 +89,26 @@ class UsersController extends Controller
                         'image'                     => $data['image'],
                         'type_user'                 => $data['type_user'],
                     ]);
+                else
+                    $user = User::create([
+                        'first_name'                => $data['first_name'],
+                        'last_name'                 => $data['last_name'],
+                        'shipping_address'          => $data['shipping_address'],
+                        'shipping_city'             => $data['shipping_city'],
+                        'shipping_state'            => $data['shipping_state'],
+                        'shipping_zipcode'          => $data['shipping_zipcode'],
+                        'email'                     => $data['email'],
+                        'password'                  => Hash::make($data['password']),
+                        'api_token'                 => 'none',
+                        'image'                     => $data['image'],
+                        'type_user'                 => $data['type_user'],
+                    ]);
 
                     $user->api_token = JWTAuth::fromUser($user,['email'=>$user->email]);
                     $user->save();
 
                     return response()->json($user, 201);
-                /*} else {
 
-                    return response()->json(['error' => 'Password no merge'], 401, []);
-
-                }*/
 			}
         } else {
             return response()->json(['error' => 'Unauthorized'], 401, []);
@@ -132,29 +142,27 @@ class UsersController extends Controller
                 if (User::where('id','<>',$id)->where('email','=',$data['email'])->first()) {
                     return response()->json(['error' => 'Other user is assigned this email'], 406);
                 } else {
-
-                    //if ($data['password'] === $data['confirm_password']){
-                        $user->first_name           = $data['first_name'];
-                        $user->last_name            = $data['last_name'];
-                        $user->shipping_address     = $data['shipping_address'];
-                        $user->shipping_city        = $data['shipping_city'];
-                        $user->shipping_state       = $data['shipping_state'];
-                        $user->shipping_zipcode     = $data['shipping_zipcode'];
-                        $user->last_name            = $data['last_name'];
+                    if ($user->type_user === 1){
                         $user->youtube_url          = $data['youtube_url'];
                         $user->spotify_url          = $data['spotify_url'];
                         $user->podcast_url          = $data['podcast_url'];
                         $user->itunes_url           = $data['itunes_url'];
-                        $user->email                = $data['email'];
-                        $user->image                = $data['image'];
-                        $user->password             = Hash::make($data['password']);
-                        $user->api_token            = JWTAuth::fromUser($user,['email'=>$user->email]);
-                        $user->save();
+                    }
+                    $user->first_name           = $data['first_name'];
+                    $user->last_name            = $data['last_name'];
+                    $user->shipping_address     = $data['shipping_address'];
+                    $user->shipping_city        = $data['shipping_city'];
+                    $user->shipping_state       = $data['shipping_state'];
+                    $user->shipping_zipcode     = $data['shipping_zipcode'];
+                    $user->last_name            = $data['last_name'];
+                    $user->email                = $data['email'];
+                    $user->image                = $data['image'];
+                    $user->password             = Hash::make($data['password']);
+                    $user->api_token            = JWTAuth::fromUser($user,['email'=>$user->email]);
+                    $user->save();
 
-                        return response()->json(new UserResource($user), 200);
-                    /*} else {
-                        return response()->json(['error' => 'Password no merge'], 401, []);
-                    }*/
+                    return response()->json(new UserResource($user), 200);
+
                 }
 
             } catch (ModelNotFoundException $e) {
