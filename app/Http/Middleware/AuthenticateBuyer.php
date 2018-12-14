@@ -36,6 +36,7 @@ class AuthenticateBuyer
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        //dd($this->auth->user());
         if ($this->auth->guard($guard)->guest()) {
             return response('Unauthorized.', 401);
         } else if($this->auth->user()->type_user == User::BUYER){

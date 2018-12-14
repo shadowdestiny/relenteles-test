@@ -56,10 +56,10 @@ class FavoriteController extends Controller
 
                     return response()->json(new FavoriteResource($favorite), 201);
                 } else {
-                    return response()->json(['error' => 'Duplicate row'], 406, []);
+                    return response()->json(['error' => 'Duplicate row'], 406);
                 }
             } else {
-                return response()->json(['error' => 'Not Found product'], 406, []);
+                return response()->json(['error' => 'Not Found product'], 406);
             }
 
         } else {

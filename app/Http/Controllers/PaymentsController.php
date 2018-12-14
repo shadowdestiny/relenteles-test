@@ -24,7 +24,7 @@ class PaymentsController extends Controller
 
     public function createSubscription(Request $request)
     {
-
+        die("asdf");
         if ($request->isJson()) {
 
             $this->validate($request,[
