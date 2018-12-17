@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class SellerSale extends Model
+class WishList extends Model
 {
 
 
@@ -19,10 +19,7 @@ class SellerSale extends Model
      */
     protected $fillable = [
         'product_id',
-        'user_id',
-        'seller_id',
-        'number_order',
-        'number_tracking',
+        'buyer_id',
     ];
 
     /**
@@ -34,19 +31,8 @@ class SellerSale extends Model
 
     ];
 
-    // states
-    const STATES = [
-        "NOT_SENT"      => 0,
-        "ON_THE_WAY"    => 1,
-        "DELIVERED"     => 2,
-    ];
-
     public function buyer(){
-        return $this->hasOne(User::class,'id','user_id');
-    }
-
-    public function seller(){
-        return $this->hasOne(User::class,'id','seller_id');
+        return $this->hasOne(User::class,'id','buyer_id');
     }
 
     public function product(){

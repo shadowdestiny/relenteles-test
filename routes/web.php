@@ -56,6 +56,12 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 
 $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 
+    // wish list
+    $router->post('/wish_list', ['uses' => 'WishListController@createList']);
+    $router->delete('/wish_list/{id}', ['uses' => 'WishListController@deleteList']);
+    $router->get('/wish_list', ['uses' => 'WishListController@getAllWishList']);
+    $router->get('/wish_list/{id}', ['uses' => 'WishListController@getWishList']);
+
     // order
     $router->get('/orders', ['uses' => 'SellerSaleController@getByBuyer']);
     $router->get('/orders/{id}', ['uses' => 'SellerSaleController@getFindByBuyer']);
