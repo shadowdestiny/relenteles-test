@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Product;
+use App\SellerSale;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Stripe\Charge;
+use Stripe\Stripe;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PaymentsController extends Controller
@@ -24,44 +28,44 @@ class PaymentsController extends Controller
 
     public function createSubscription(Request $request)
     {
-        die("asdf");
         if ($request->isJson()) {
 
             $this->validate($request,[
                 'stripeToken'       => 'required',
                 'product_id'        => 'required',
-                //'stripeTokenType'   => 'required',
-                //'stripeEmail'       => 'required',
             ]);
 
             $user = Auth::user();
 
-            $plan = 'plan_E1QZWsdIFxnKUa';
-            //$stripeToken = $request->input('stripeToken');
+            Stripe::setApiKey(env('STRIPE_KEY'));
             $stripeToken = $request->input('stripeToken');
 
-            try {
+            $product = Product::find($request->input("product_id"));
 
-                //$user->newSubscription('main',$plan)->create($stripeToken);
+            if ($product){
+                DB::beginTransaction();
+
                 $charge = Charge::create([
-                    "amount"         => 102,
+                    "amount"         => $product->price,
                     "currency"       => "usd",
-                    "description"    => "prueba",
-                    "source"         => $stripeToken,
+                    "description"    => "product",
+                    "source"         => $stripeToken["id"],
                 ]);
-
-                die("hola");
 
                 $sellerSale = new SellerSale();
                 $sellerSale->product_id     = $request['product_id'];
                 $sellerSale->user_id        = $user->id;
-                $sellerSale->number_order   = '1234';
+                $sellerSale->number_order   = $charge->created;
+                $sellerSale->seller_id      = $product->seller->id;
+
+                $sellerSale->save();
+
+                DB::commit();
 
                 return response()->json($charge, 200);
-            } catch (\Exception $e){
-                return response()->json(['error' => $e], 401);
+            } else {
+                return response()->json(['error' => 'Not found product'], 401);
             }
-
 
         }
     }

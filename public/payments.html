@@ -4,81 +4,149 @@
 <head>
 	<script src="https://checkout.stripe.com/checkout.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script>
-	
-	jQuery(function(){
-		var handler = StripeCheckout.configure({
-		  key: 'pk_test_y7vTivHZ4RDhunMhx1GwtKdy',
-		  image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
-		  locale: 'auto',
-		  token: function(token) {
-			// You can access the token ID with `token.id`.
-			// Get the token ID to your server-side code for use.
-			$("#section").show();
-			$("#stripe_token").val(token.id);
+	<style type="text/css">
+		/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+		.StripeElement {
+			background-color: white;
+			height: 40px;
+			padding: 10px 12px;
+			border-radius: 4px;
+			border: 1px solid transparent;
+			box-shadow: 0 1px 3px 0 #e6ebf1;
+			-webkit-transition: box-shadow 150ms ease;
+			transition: box-shadow 150ms ease;
+		}
 
-				console.log(token);
-		  }
-		});
+		.StripeElement--focus {
+			box-shadow: 0 1px 3px 0 #cfd7df;
+		}
 
-		document.getElementById('customButton').addEventListener('click', function(e) {
-		  // Open Checkout with further options:
-		  handler.open({
-			name: 'ElaniinDigital',
-			description: '2 widgets',
-			amount: 10
-		  });
-		  e.preventDefault();
-		});
+		.StripeElement--invalid {
+			border-color: #fa755a;
+		}
 
-		// Close Checkout on page navigation:
-		window.addEventListener('popstate', function() {
-		  handler.close();
-		});
-		
-		$("#send_to_our_server").click(function(){
-			$.ajax({
-			  method:"POST",
-			  url: "http://localhost:8090/payment",
-			  //url: "http://35.202.88.103/payment",
-			  dataType : "json",
-			  headers : {
-					"Content-Type":"application/json",
-					"Api-Token": $("#api_token").val()
-			  },
-			  data: JSON.stringify({ 
-				"stripeToken" : $("#stripe_token").val(),
-				"product_id" : 1,
-			  })
-			  //context: document.body
-			}).done(function() {
-			  alert("send data to out server! :-)");
-			});
-		});
-	});
-		
-	</script>
+		.StripeElement--webkit-autofill {
+			background-color: #fefde5 !important;
+		}
+	</style>
+
 </head>
 <body>
 
-<button id="customButton">Purchase</button>
+<script src="https://js.stripe.com/v3/"></script>
 
-<br />
-<div  id="section" style="display:none">
-	
-	<label for="api_token">
-		api token, to our server
-	</label>
-	<input type="text" placeholder="Api-Token" id="api_token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFkbWluX0ByZWxlbnRsZXNzLmNvbSIsImV4cCI6MTU0NDgxMzk3Niwic3ViIjoyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvMiIsImlhdCI6MTU0NDgxMDM3NiwibmJmIjoxNTQ0ODEwMzc2LCJqdGkiOiJmMmxyM2M0TFhFQ2QzOTExIn0.IxaSPX7NrmSDQ-HPlDo5QPkJ_SytGdXc_l6KREfA6IY">
-	<br />
-	<label for="stripe_token">
-	Stipe Token from api of stripe
-	</label>
-	<input type="text" placeholder="Stripe-Token" id="stripe_token">
-	<br />
-	<button id="send_to_our_server">Submit to we application</button>
-</div>
+<form action="/charge" method="post" id="payment-form">
+	<div class="form-row">
+		<label for="card-element">
+			Credit or debit card
+		</label>
+		<div id="card-element">
+			<!-- A Stripe Element will be inserted here. -->
+		</div>
 
+		<!-- Used to display form errors. -->
+		<div id="card-errors" role="alert"></div>
+	</div>
+
+	<button>Submit Payment</button>
+</form>
+<script>
+
+    // Create a Stripe client.
+    var stripe = Stripe('pk_test_y7vTivHZ4RDhunMhx1GwtKdy');
+
+    // Create an instance of Elements.
+    var elements = stripe.elements();
+
+    // Custom styling can be passed to options when creating an Element.
+    // (Note that this demo uses a wider set of styles than the guide below.)
+    var style = {
+        base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#aab7c4'
+            }
+        },
+        invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+        }
+    };
+
+    // Create an instance of the card Element.
+    var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into the `card-element` <div>.
+    card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function(event) {
+        var displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    // Handle form submission.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        stripe.createToken(card).then(function(result) {
+            if (result.error) {
+                // Inform the user if there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+            } else {
+                // Send the token to your server.
+                stripeTokenHandler(result.token);
+            }
+        });
+    });
+
+    // Submit the form with the token ID.
+    function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'text');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+
+        $.ajax({
+            method:"POST",
+            url: "http://localhost:8090/payment",
+            //url: "http://35.202.88.103/payment",
+            dataType : "json",
+            headers : {
+                "Content-Type":"application/json",
+                "Api-Token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImN1c3RvbWVyQGN1c3RvbWVyLmNvbSIsImV4cCI6MTU0NTQyNzIzNiwic3ViIjo1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDQ4MjI0MzYsIm5iZiI6MTU0NDgyMjQzNiwianRpIjoielk1VzVQcDVacXllYWhYMiJ9.No-zP2tUM63_6WPpj7K06M9i0SW8ML-jtMT3CHL0AAA"
+            },
+            data: JSON.stringify({
+                "stripeToken" : token,
+                "product_id" : 1
+            })
+            //context: document.body
+        }).done(function() {
+            alert("send data to out server! :-)");
+        });
+
+        //form.submit();
+    }
+
+</script>
 </body>
 
 </html>

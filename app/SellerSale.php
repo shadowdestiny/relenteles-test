@@ -20,6 +20,7 @@ class SellerSale extends Model
     protected $fillable = [
         'product_id',
         'user_id',
+        'seller_id',
         'number_order',
     ];
 
@@ -32,11 +33,22 @@ class SellerSale extends Model
 
     ];
 
-    public function user(){
-        return $this->hasOne(User::class,'user_id','id');
+    // states
+    const STATES = [
+        "NOT_SENT"      => 0,
+        "ON_THE_WAY"    => 1,
+        "DELIVERED"     => 2,
+    ];
+
+    public function buyer(){
+        return $this->hasOne(User::class,'id','user_id');
+    }
+
+    public function seller(){
+        return $this->hasOne(User::class,'id','seller_id');
     }
 
     public function product(){
-        return $this->hasOne(Product::class,'product_id','id');
+        return $this->hasOne(Product::class,'id','product_id');
     }
 }
