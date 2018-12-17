@@ -24,7 +24,6 @@ class SellerSaleController extends Controller
 
     public function getBySeller()
     {
-
             $user = Auth::user();
 
             $seller_sale = SellerSale::where("seller_id","=",$user->id)
@@ -35,12 +34,27 @@ class SellerSaleController extends Controller
             } else {
                 return response()->json(['error' => 'Not found'], 406, []);
             }
+    }
+
+    public function getFindBySeller($id)
+    {
+
+        $user = Auth::user();
+
+        $seller_sale = SellerSale::where("seller_id","=",$user->id)
+            ->where('id','=',$id)
+            ->first();
+
+        if($seller_sale){
+            return  response()->json(new SellerSalesResource($seller_sale), 200);
+        } else {
+            return response()->json(['error' => 'Not found'], 406, []);
+        }
 
     }
 
     public function getByBuyer()
     {
-
         $user = Auth::user();
 
         $seller_sale = SellerSale::where("user_id","=",$user->id)
@@ -48,6 +62,23 @@ class SellerSaleController extends Controller
 
         if($seller_sale){
             return SellerSalesResource::collection($seller_sale);
+        } else {
+            return response()->json(['error' => 'Not found'], 406, []);
+        }
+
+    }
+
+    public function getFindByBuyer($id)
+    {
+        $user = Auth::user();
+
+        $seller_sale = SellerSale::where("user_id","=",$user->id)
+            ->where('id','=',$id)
+            ->first()
+        ;
+
+        if($seller_sale){
+            return  response()->json(new SellerSalesResource($seller_sale), 200);
         } else {
             return response()->json(['error' => 'Not found'], 406, []);
         }

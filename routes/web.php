@@ -58,6 +58,7 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 
     // order
     $router->get('/orders', ['uses' => 'SellerSaleController@getByBuyer']);
+    $router->get('/orders/{id}', ['uses' => 'SellerSaleController@getFindByBuyer']);
 
     // products
     $router->get('/products_of_buyer', ['uses' => 'ProductController@getByBuyer']);
@@ -86,6 +87,7 @@ $router->group(['middleware' => ['auth_seller']], function () use ($router) {
 
     // order
     $router->get('/sales', ['uses' => 'SellerSaleController@getBySeller']);
+    $router->get('/sales/{id}', ['uses' => 'SellerSaleController@getFindBySeller']);
 
     // Category
     $router->post('/category', ['uses' => 'CategoryController@createCategory']);

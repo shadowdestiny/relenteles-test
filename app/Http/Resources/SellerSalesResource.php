@@ -19,7 +19,7 @@ class SellerSalesResource extends JsonResource
             'id'                    => $this->id,
             'shipping_status'       => $this->shipping_status,
             'num_order'             => $this->number_order,
-            'product'               => $this->product,
+            'product'               => new ProductResource($this->product),
             'buyer'                 => $this->buyer,
             'seller'                => $this->seller,
         ];

@@ -41,7 +41,7 @@ class Product extends Model
         return $this->hasMany(Rate::class,'product_id','id');
     }
     public function category(){
-        return $this->hasMany(Category::class,'id','category_id');
+        return $this->hasOne(Category::class,'id','category_id');
         // change to
         //return $this->belongsTo(Category::class,'category_id','id');
     }
