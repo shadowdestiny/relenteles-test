@@ -49,7 +49,7 @@ class PaymentsController extends Controller
                     "amount"         => $product->price,
                     "currency"       => "usd",
                     "description"    => "product",
-                    "source"         => $stripeToken["id"],
+                    "source"         => $stripeToken,
                 ]);
 
                 $sellerSale = new SellerSale();
