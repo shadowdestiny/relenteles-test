@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class Setting extends Model
+class SettingForSeller extends Model
 {
 
 
@@ -19,10 +19,9 @@ class Setting extends Model
      */
     protected $fillable = [
         'id',
-        'code',
-        'description',
-        'type',
-        'order',
+        'setting_id',
+        'buyer_id',
+        'value',
     ];
 
     /**
@@ -33,5 +32,13 @@ class Setting extends Model
     protected $hidden = [
 
     ];
+
+    public function seller(){
+        return $this->hasOne(User::class,'id','seller_id');
+    }
+
+    public function setting(){
+        return $this->hasOne(Setting::class,'id','setting_id');
+    }
 
 }

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Car;
-use App\Http\Resources\CarResource;
+use App\Http\Resources\SettingSellerResource;
+use App\SettingForSeller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
@@ -20,19 +20,35 @@ class SettingController extends Controller
         //
     }
 
-    public function getAll()
+    public function getAllSeller()
     {
 
             $user = Auth::user();
 
-            $cars = Car::where("user_id","=",$user->id)
+            $cars = SettingForSeller::where("seller_id","=",$user->id)
                 ->get();
 
             if($cars){
-                return CarResource::collection($cars);
+                return SettingSellerResource::collection($cars);
             } else {
                 return response()->json(['error' => 'Not found'], 406, []);
             }
+
+    }
+
+    public function getAllBuyer()
+    {
+
+        $user = Auth::user();
+
+        $cars = SettingForSeller::where("seller_id","=",$user->id)
+            ->get();
+
+        if($cars){
+            return SettingSellerResource::collection($cars);
+        } else {
+            return response()->json(['error' => 'Not found'], 406, []);
+        }
 
     }
 
