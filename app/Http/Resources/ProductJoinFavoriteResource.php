@@ -35,6 +35,7 @@ class ProductJoinFavoriteResource extends JsonResource
             'rates'             => RateResource::collection($this->rates),
             'rating'            => $sum / (count($this->rates) > 0 ? count($this->rates) : 1),
             'is_favorite'       => $this["favorite_id"] === null ? false : true,
+            'favorite_id'       => $this["favorite_id"],
             'created_at'        => $this->created_at,
             'updated_at'        => $this->updated_at,
         ];
