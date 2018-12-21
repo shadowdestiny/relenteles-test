@@ -1,0 +1,44 @@
+<html>
+
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    Code: <span id="code"></span>
+    <br />
+    Stripe_user_id id : <span id="stripe_user_id"></span>
+</body>
+
+<script>
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var c = url.searchParams.get("code");
+
+    document.getElementById("code").innerHTML = c;
+
+    $.ajax({
+        method:"POST",
+        //url: "http://localhost:8090/token",
+        url: "http://35.202.88.103/token",
+        dataType : "json",
+        headers : {
+            "Content-Type":"application/json"
+        },
+        data: JSON.stringify({
+            "code" : c
+        })
+    }).done(function(result) {
+        alert("Generate AuthIO id Seller");
+        console.log(result);
+        $("#stripe_user_id").text(result.stripe_user_id);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        if (jqXHR.status === 401){
+            var text;
+            alert(text = "The user token is expired");
+            $("#stripe_user_id").text(text);
+        }
+    });
+</script>
+
+</html>

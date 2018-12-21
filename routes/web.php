@@ -25,6 +25,7 @@ $router->get('/key', function () {
 $router->group(['middleware' => []], function () use ($router) {
     $router->post('/users/login', ['uses' => 'UsersController@getToken']);
     $router->post('/users', ['uses' => 'UsersController@createUser']);
+    $router->post('/token', ['uses' => 'PaymentsController@authStripe']);
 });
 
 $router->group(['middleware' => ['auth']], function () use ($router) {
