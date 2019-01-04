@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\SettingBuyerResource;
 use App\Http\Resources\SettingSellerResource;
+use App\Setting;
+use App\SettingForBuyer;
 use App\SettingForSeller;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -20,91 +23,141 @@ class SettingController extends Controller
         //
     }
 
-    public function getAllSeller()
+    public function getAllSettingSeller()
     {
 
-            $user = Auth::user();
+            $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_SELLER)->get();
 
-            $cars = SettingForSeller::where("seller_id","=",$user->id)
-                ->get();
-
-            if($cars){
-                return SettingSellerResource::collection($cars);
+            if($setting){
+                return SettingSellerResource::collection($setting);
             } else {
                 return response()->json(['error' => 'Not found'], 406, []);
             }
 
     }
 
-    public function getAllBuyer()
+    public function getOneSettingSeller($id)
     {
 
-        $user = Auth::user();
+        $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_SELLER)
+            ->where('id',$id)
+            ->first();
 
-        $cars = SettingForSeller::where("seller_id","=",$user->id)
-            ->get();
-
-        if($cars){
-            return SettingSellerResource::collection($cars);
+        if($setting){
+            return new SettingSellerResource($setting);
         } else {
             return response()->json(['error' => 'Not found'], 406, []);
         }
 
     }
 
-    public function createCar(Request $request)
+    public function getOneSettingBuyer($id)
+    {
+
+        $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_BUYER)
+            ->where('id',$id)
+            ->first();
+
+        if($setting){
+            return new SettingBuyerResource($setting);
+        } else {
+            return response()->json(['error' => 'Not found'], 406, []);
+        }
+
+    }
+
+    public function getAllSettingBuyer()
+    {
+
+        $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_BUYER)->get();
+
+        if($setting){
+            return SettingBuyerResource::collection($setting);
+        } else {
+            return response()->json(['error' => 'Not found'], 406, []);
+        }
+
+    }
+
+    public function checkSettingSeller(Request $request)
     {
 
         $this->validate($request,[
-            'product_id' => 'required|integer',
+            'code' => 'required|max:100',
+            'checked' => 'required|boolean',
         ]);
 
-        if ($request->isJson()) {
+        $user = Auth::user();
 
-            $user = Auth::user();
+        $settingForSeller = SettingForSeller::join('settings','settings.id','=','setting_for_sellers.setting_id')
+            ->where("seller_id","=",$user->id)
+            ->where('settings.type','=',Setting::TYPE_NOTIFICATION_SELLER)
+            ->where('settings.code','=',$request['code'])
+            ->select("setting_for_sellers.id")
+            ->first();
 
-            $card = Car::where("product_id","=",$request["product_id"])
-                ->where("user_id","=",$user->id)
-                ->first();
+        if ($request["checked"] === true){
 
-            if(!$card){
-                $car = new Car();
-                $car->product_id           = $request['product_id'];
-                $car->user_id              = $user->id;
-                $car->save();
-                return response()->json(new CarResource($car), 201);
-            } else {
-                return response()->json(['error' => 'Duplicate row or not found'], 401, []);
+            if(!$settingForSeller){
+
+                $setting = Setting::where('code',$request["code"])->first();
+
+                $newSettingForSeller = new SettingForSeller();
+                $newSettingForSeller->setting_id    = $setting->id;
+                $newSettingForSeller->seller_id     = $user->id;
+                $newSettingForSeller->save();
             }
+
+            $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_SELLER)->get();
+            return SettingSellerResource::collection($setting);
         } else {
-            return response()->json(['error' => 'Unauthorized'], 401, []);
+            if ($settingForSeller)
+                $settingForSeller->delete();
+
+            $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_SELLER)->get();
+            return SettingSellerResource::collection($setting);
         }
+
     }
 
-    public function deleteCar( $id)
+    public function checkSettingBuyer(Request $request)
     {
 
+        $this->validate($request,[
+            'code' => 'required|max:100',
+            'checked' => 'required|boolean',
+        ]);
 
-            try {
+        $user = Auth::user();
 
-                $user = Auth::user();
+        $settingForBuyer = SettingForBuyer::join('settings','settings.id','=','setting_for_buyers.setting_id')
+            ->where("buyer_id","=",$user->id)
+            ->where('settings.type','=',Setting::TYPE_NOTIFICATION_BUYER)
+            ->where('settings.code','=',$request['code'])
+            ->select("setting_for_buyers.id")
+            ->first();
 
-                $car = Car::where('id','=',$id)
-                    ->where('user_id','=',$user->id)->first();
-                ;
+        if ($request["checked"] === true){
 
-                if ($car){
-                    $car->delete();
-                    return response()->json(new CarResource($car), 200);
-                } else {
-                    return response()->json(['error' => 'Not found'], 406);
-                }
+            if(!$settingForBuyer){
 
-            } catch (ModelNotFoundException $e) {
-                return response()->json(['error' => 'No content'], 406);
+                $setting = Setting::where('code',$request["code"])->first();
+
+                $newSettingForBuyer = new SettingForBuyer();
+                $newSettingForBuyer->setting_id    = $setting->id;
+                $newSettingForBuyer->buyer_id      = $user->id;
+                $newSettingForBuyer->save();
             }
 
+            $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_BUYER)->get();
+            return SettingBuyerResource::collection($setting);
+        } else {
+            if ($settingForBuyer)
+                $settingForBuyer->delete();
+
+            $setting = Setting::where('type',Setting::TYPE_NOTIFICATION_BUYER)->get();
+            return SettingBuyerResource::collection($setting);
+        }
 
     }
-
 }

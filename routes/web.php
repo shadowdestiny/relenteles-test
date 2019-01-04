@@ -57,6 +57,11 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
 
 $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 
+    // Setting
+    $router->get('/setting_buyer', ['uses' => 'SettingController@getAllSettingBuyer']);
+    $router->get('/setting_buyer/{id}', ['uses' => 'SettingController@getOneSettingBuyer']);
+    $router->post('/setting_buyer', ['uses' => 'SettingController@checkSettingBuyer']);
+
     // wish list
     $router->post('/wish_list', ['uses' => 'WishListController@createList']);
     $router->delete('/wish_list/{id}', ['uses' => 'WishListController@deleteList']);
@@ -91,6 +96,11 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 });
 
 $router->group(['middleware' => ['auth_seller']], function () use ($router) {
+
+    // Setting
+    $router->get('/setting_seller', ['uses' => 'SettingController@getAllSettingSeller']);
+    $router->get('/setting_seller/{id}', ['uses' => 'SettingController@getOneSettingSeller']);
+    $router->post('/setting_seller', ['uses' => 'SettingController@checkSettingSeller']);
 
     // order
     $router->get('/sales', ['uses' => 'SellerSaleController@getBySeller']);

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class SettingSellerResource extends JsonResource
+class SettingBuyerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -23,7 +23,7 @@ class SettingSellerResource extends JsonResource
             'id'                => $this->id,
             'code'              => $this->code,
             'description'       => $this->description,
-            'checked'           => $this->setting_seller->where("seller_id",'=',$user->id)->first() ? true : false,
+            'checked'           => $this->setting_buyer->where("buyer_id",'=',$user->id)->first() ? true : false,
         ];
     }
 }
