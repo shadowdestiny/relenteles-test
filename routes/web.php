@@ -82,6 +82,7 @@ $router->group(['middleware' => ['auth_buyer']], function () use ($router) {
 
     // Stripe Subcriptions
     $router->post('/payment', ['uses' => 'PaymentsController@createSubscription']);
+    $router->post('/payment_product', ['uses' => 'PaymentsController@createPayment']);
 
     // Favorite
     $router->post('/favorite', ['uses' => 'FavoriteController@createFavorite']);
