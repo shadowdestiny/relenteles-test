@@ -88,6 +88,7 @@ class UsersController extends Controller
                         'api_token'                 => 'none',
                         'image'                     => $data['image'],
                         'type_user'                 => $data['type_user'],
+                        'stripe_id'                 => isset($data['stripe_id']) ? $data['stripe_id'] : null,
                     ]);
                 else
                     $user = User::create([

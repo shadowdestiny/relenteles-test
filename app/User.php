@@ -45,6 +45,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'podcast_url',
         'itunes_url',
         'image',
+        'stripe_id',
     ];
 
     /**
@@ -56,7 +57,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
         'api_token',
         'remember_token',
-        "stripe_id",
         "card_brand",
         "card_last_four",
         "trial_ends_at"

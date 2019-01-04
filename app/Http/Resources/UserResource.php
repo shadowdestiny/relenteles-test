@@ -33,6 +33,8 @@ class UserResource extends JsonResource
             'api_token'         => $this->api_token,
             'image'             => $this->image,
             'type_user'         => $this->type_user,
+
+            'stripe_id'         => $this->stripe_id,
         ];
     }
 }

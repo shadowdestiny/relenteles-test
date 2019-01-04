@@ -25,6 +25,7 @@ class UserPrivateResource extends JsonResource
             'shipping_zipcode'  => $this->shipping_zipcode,
             'image'             => $this->image,
             'type_user'         => $this->type_user,
+            'stripe_id'         => $this->stripe_id,
         ];
     }
 }
