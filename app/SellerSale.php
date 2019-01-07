@@ -23,6 +23,10 @@ class SellerSale extends Model
         'seller_id',
         'number_order',
         'number_tracking',
+        'shipping_status',
+        'shipping_address',
+        'shipping_city',
+        'shipping_zipcode',
     ];
 
     /**

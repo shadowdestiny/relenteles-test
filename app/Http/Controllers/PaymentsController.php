@@ -110,6 +110,11 @@ class PaymentsController extends Controller
             $this->validate($request,[
                 'stripeToken'       => 'required',
                 'products'          => 'required',
+                'shipping_status'   => 'required',
+                'number_tracking'   => 'required',
+                'shipping_address'  => 'required',
+                'shipping_city'     => 'required',
+                'shipping_zipcode'  => 'required',
             ]);
 
 
@@ -160,6 +165,12 @@ class PaymentsController extends Controller
                             $sellerSale->user_id        = $user->id;
                             $sellerSale->number_order   = $charge->created;
                             $sellerSale->seller_id      = $product->seller->id;
+
+                            $sellerSale->shipping_status        = $request["shipping_status"];
+                            $sellerSale->number_tracking        = $request["number_tracking"];
+                            $sellerSale->shipping_address       = $request["shipping_address"];
+                            $sellerSale->shipping_city          = $request["shipping_city"];
+                            $sellerSale->shipping_zipcode       = $request["shipping_zipcode"];
 
                             $sellerSale->save();
 
