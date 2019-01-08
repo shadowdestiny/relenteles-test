@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Order;
 use App\Product;
 use App\SellerSale;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Stripe\Charge;
 use Stripe\OAuth;
 use Stripe\Stripe;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PaymentsController extends Controller
 {
@@ -85,11 +83,16 @@ class PaymentsController extends Controller
                     "application_fee" => ceil($fee * 100),
                 ],["stripe_account" => $request["code"]]);
 
+                $order = new Order();
+                $order->buyer_id = $user->id;
+                $order->save();
+
                 $sellerSale = new SellerSale();
                 $sellerSale->product_id     = $request['product_id'];
                 $sellerSale->user_id        = $user->id;
                 $sellerSale->number_order   = $charge->created;
                 $sellerSale->seller_id      = $product->seller->id;
+                $sellerSale->order_id       = $order->id;
 
                 $sellerSale->save();
 
@@ -131,6 +134,10 @@ class PaymentsController extends Controller
                     'email'     => $user->email,
                 ]);
 
+                $order = new Order();
+                $order->buyer_id = $user->id;
+                $order->save();
+
                 foreach ($request["products"] as $product_object){
 
                     $product_id     = $product_object["id"];
@@ -160,11 +167,13 @@ class PaymentsController extends Controller
                                 "application_fee" => ceil($fee * 100),
                             ],["stripe_account" => $product->seller->stripe_id]);
 
+
                             $sellerSale = new SellerSale();
                             $sellerSale->product_id     = $product_id;
                             $sellerSale->user_id        = $user->id;
                             $sellerSale->number_order   = $charge->created;
                             $sellerSale->seller_id      = $product->seller->id;
+                            $sellerSale->order_id       = $order->id;
 
                             $sellerSale->shipping_status        = $request["shipping_status"];
                             $sellerSale->number_tracking        = $request["number_tracking"];

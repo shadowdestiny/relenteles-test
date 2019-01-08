@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Car;
+use App\Http\Resources\BuyerSalesResource;
 use App\Http\Resources\CarResource;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\SellerSalesResource;
+use App\Order;
 use App\SellerSale;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -57,11 +60,10 @@ class SellerSaleController extends Controller
     {
         $user = Auth::user();
 
-        $seller_sale = SellerSale::where("user_id","=",$user->id)
-            ->get();
+        $order = Order::where("buyer_id",$user->id)->get();
 
-        if($seller_sale){
-            return SellerSalesResource::collection($seller_sale);
+        if($order){
+            return response()->json(['orders' => OrderResource::collection($order)]);
         } else {
             return response()->json(['error' => 'Not found'], 406, []);
         }
@@ -72,13 +74,13 @@ class SellerSaleController extends Controller
     {
         $user = Auth::user();
 
-        $seller_sale = SellerSale::where("user_id","=",$user->id)
+        $order = Order::where("buyer_id",$user->id)
             ->where('id','=',$id)
-            ->first()
-        ;
+            ->first();
 
-        if($seller_sale){
-            return  response()->json(new SellerSalesResource($seller_sale), 200);
+
+        if($order){
+            return  response()->json(new OrderResource($order), 200);
         } else {
             return response()->json(['error' => 'Not found'], 406, []);
         }
