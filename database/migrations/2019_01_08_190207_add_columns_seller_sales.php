@@ -16,7 +16,7 @@ class AddColumnsSellerSales extends Migration
         Schema::table('seller_sales', function (Blueprint $table) {
             $table->unsignedInteger('order_id');
 
-            //$table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('order_id')->references('id')->on('orders');
         });
     }
 

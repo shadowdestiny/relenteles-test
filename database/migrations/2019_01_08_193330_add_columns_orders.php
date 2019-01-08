@@ -15,7 +15,7 @@ class AddColumnsOrders extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->unsignedInteger('buyer_id');
-            //$table->foreign('buyer_id')->references('id')->on('users');
+            $table->foreign('buyer_id')->references('id')->on('users');
         });
     }
 
