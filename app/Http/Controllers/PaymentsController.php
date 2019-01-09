@@ -111,7 +111,7 @@ class PaymentsController extends Controller
 
     public function createPayment(Request $request)
     {
-        //if ($request->isJson()) {
+        if ($request->isJson()) {
 
             $this->validate($request,[
                 'stripeToken'       => 'required',
@@ -129,80 +129,86 @@ class PaymentsController extends Controller
             Stripe::setApiKey(env('STRIPE_KEY'));
             $stripeToken = $request->input('stripeToken');
 
-            if (is_array($request["products"])){
+            try {
 
-                // Create a Customer:
-                $customer = \Stripe\Customer::create([
-                    'source'    => $stripeToken,
-                    'email'     => $user->email,
-                ]);
+                if (is_array($request["products"])){
 
-                $order = new Order();
-                $order->buyer_id = $user->id;
-                $order->save();
+                    // Create a Customer:
+                    $customer = \Stripe\Customer::create([
+                        'source'    => $stripeToken,
+                        'email'     => $user->email,
+                    ]);
 
-                foreach ($request["products"] as $product_object){
+                    $order = new Order();
+                    $order->buyer_id = $user->id;
+                    $order->save();
 
-                    $product_id     = $product_object["id"];
-                    $unit           = $product_object["unit"];
+                    foreach ($request["products"] as $product_object){
 
-                    if ($unit > 0){
-                        $product = Product::find($product_id);
+                        $product_id     = $product_object["id"];
+                        $unit           = $product_object["unit"];
 
-                        if ($product->seller->stripe_id === null)
-                            return response()->json(['error' => 'Not found stripe_id in user'], 401);
+                        if ($unit > 0){
+                            $product = Product::find($product_id);
 
-                        if ($product){
-                            DB::beginTransaction();
+                            if ($product->seller->stripe_id === null)
+                                return response()->json(['error' => 'Not found stripe_id in user'], 401);
 
-                            $amount = $product->price;
-                            $fee = ($amount * 10) / 100;
+                            if ($product){
+                                DB::beginTransaction();
 
-                            // unit
-                            $amount = $amount * $unit;
-                            $fee    = $fee * $unit;
+                                $amount = $product->price;
+                                $fee = ($amount * 10) / 100;
 
-                            $charge = Charge::create([
-                                "amount"         => ($amount - $fee) * 100,
-                                "currency"       => "usd",
-                                "description"    => $product->description . " unit: (".$unit.")",
-                                'customer'       => $customer->id,
-                                "application_fee" => ceil($fee * 100),
-                            ],["stripe_account" => $product->seller->stripe_id]);
+                                // unit
+                                $amount = $amount * $unit;
+                                $fee    = $fee * $unit;
 
-
-                            $sellerSale = new SellerSale();
-                            $sellerSale->product_id     = $product_id;
-                            $sellerSale->user_id        = $user->id;
-                            $sellerSale->number_order   = $charge->created;
-                            $sellerSale->seller_id      = $product->seller->id;
-                            $sellerSale->order_id       = $order->id;
-
-                            $sellerSale->shipping_status        = $request["shipping_status"];
-                            $sellerSale->number_tracking        = $request["number_tracking"];
-                            $sellerSale->shipping_address       = $request["shipping_address"];
-                            $sellerSale->shipping_city          = $request["shipping_city"];
-                            $sellerSale->shipping_zipcode       = $request["shipping_zipcode"];
-
-                            $sellerSale->save();
-
-                            DB::commit();
+                                $charge = Charge::create([
+                                    "amount"         => ($amount - $fee) * 100,
+                                    "currency"       => "usd",
+                                    "description"    => $product->description . " unit: (".$unit.")",
+                                    'customer'       => $customer->id,
+                                    "application_fee" => ceil($fee * 100),
+                                ],["stripe_account" => $product->seller->stripe_id]);
 
 
+                                $sellerSale = new SellerSale();
+                                $sellerSale->product_id     = $product_id;
+                                $sellerSale->user_id        = $user->id;
+                                $sellerSale->number_order   = $charge->created;
+                                $sellerSale->seller_id      = $product->seller->id;
+                                $sellerSale->order_id       = $order->id;
+
+                                $sellerSale->shipping_status        = $request["shipping_status"];
+                                $sellerSale->number_tracking        = $request["number_tracking"];
+                                $sellerSale->shipping_address       = $request["shipping_address"];
+                                $sellerSale->shipping_city          = $request["shipping_city"];
+                                $sellerSale->shipping_zipcode       = $request["shipping_zipcode"];
+
+                                $sellerSale->save();
+
+                                DB::commit();
+
+
+                            } else {
+                                return response()->json(['error' => 'Not found product'], 401);
+                            }
+
+                            return response()->json("Ok", 200);
                         } else {
-                            return response()->json(['error' => 'Not found product'], 401);
+                            return response()->json(['error' => 'The unit must be greater than 0'], 401);
                         }
-
-                        return response()->json("Ok", 200);
-                    } else {
-                        return response()->json(['error' => 'The unit must be greater than 0'], 401);
                     }
+                } else {
+                    return response()->json(['error' => 'Product is not array'], 401);
                 }
-            } else {
-                return response()->json(['error' => 'Product is not array'], 401);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e], 500);
             }
 
-        //}
+        }
     }
 
 
