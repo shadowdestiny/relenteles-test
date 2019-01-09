@@ -89,11 +89,11 @@ class PaymentsController extends Controller
                     $order->save();
 
                     $sellerSale = new SellerSale();
-                    $sellerSale->product_id     = $request['product_id'];
-                    $sellerSale->user_id        = $user->id;
-                    $sellerSale->number_order   = $charge->created;
-                    $sellerSale->seller_id      = $product->seller->id;
-                    $sellerSale->order_id       = $order->id;
+                    $sellerSale->product_id             = $request['product_id'];
+                    $sellerSale->user_id                = $user->id;
+                    $sellerSale->number_order           = $charge->created;
+                    $sellerSale->seller_id              = $product->seller->id;
+                    $sellerSale->order_id               = $order->id;
 
                     $sellerSale->shipping_status        = "0";
                     $sellerSale->number_tracking        = "0";
