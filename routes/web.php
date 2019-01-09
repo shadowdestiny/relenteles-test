@@ -26,6 +26,10 @@ $router->group(['middleware' => []], function () use ($router) {
     $router->post('/users/login', ['uses' => 'UsersController@getToken']);
     $router->post('/users', ['uses' => 'UsersController@createUser']);
     $router->post('/token', ['uses' => 'PaymentsController@authStripe']);
+
+    // Category
+    $router->get('/category', ['uses' => 'CategoryController@getAll']);
+    $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
 });
 
 $router->group(['middleware' => ['auth']], function () use ($router) {
@@ -45,10 +49,6 @@ $router->group(['middleware' => ['auth']], function () use ($router) {
     $router->get('/users/{id}', ['uses' => 'UsersController@getUser']);
     $router->put('/users/{id}', ['uses' => 'UsersController@updateUser']);
     $router->delete('/users/{id}', ['uses' => 'UsersController@deleteUser']);
-
-    // Category
-    $router->get('/category', ['uses' => 'CategoryController@getAll']);
-    $router->get('/category/{id}', ['uses' => 'CategoryController@getCategory']);
 
     // Rate
     $router->get('/rate/{id}', ['uses' => 'RateController@getOneRate']);
