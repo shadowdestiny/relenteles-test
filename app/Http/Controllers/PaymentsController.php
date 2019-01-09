@@ -56,53 +56,56 @@ class PaymentsController extends Controller
     {
         if ($request->isJson()) {
 
-            $this->validate($request,[
-                'stripeToken'       => 'required',
-                'product_id'        => 'required',
-                'code'              => 'required', //temporal, esto hay que quitarlo
-            ]);
+            try {
+                $this->validate($request,[
+                    'stripeToken'       => 'required',
+                    'product_id'        => 'required',
+                    'code'              => 'required', //temporal, esto hay que quitarlo
+                ]);
 
-            $user = Auth::user();
+                $user = Auth::user();
 
-            Stripe::setApiKey(env('STRIPE_KEY'));
-            $stripeToken = $request->input('stripeToken');
+                Stripe::setApiKey(env('STRIPE_KEY'));
+                $stripeToken = $request->input('stripeToken');
 
-            $product = Product::find($request->input("product_id"));
+                $product = Product::find($request->input("product_id"));
 
-            if ($product){
-                DB::beginTransaction();
+                if ($product){
+                    DB::beginTransaction();
 
-                $amount = $product->price;
-                $fee = ($amount * 10) / 100;
+                    $amount = $product->price;
+                    $fee = ($amount * 10) / 100;
 
-                $charge = Charge::create([
-                    "amount"         => ($amount - $fee) * 100,
-                    "currency"       => "usd",
-                    "description"    => "product",
-                    "source"         => $stripeToken,
-                    "application_fee" => ceil($fee * 100),
-                ],["stripe_account" => $request["code"]]);
+                    $charge = Charge::create([
+                        "amount"         => ($amount - $fee) * 100,
+                        "currency"       => "usd",
+                        "description"    => "product",
+                        "source"         => $stripeToken,
+                        "application_fee" => ceil($fee * 100),
+                    ],["stripe_account" => $request["code"]]);
 
-                $order = new Order();
-                $order->buyer_id = $user->id;
-                $order->save();
+                    $order = new Order();
+                    $order->buyer_id = $user->id;
+                    $order->save();
 
-                $sellerSale = new SellerSale();
-                $sellerSale->product_id     = $request['product_id'];
-                $sellerSale->user_id        = $user->id;
-                $sellerSale->number_order   = $charge->created;
-                $sellerSale->seller_id      = $product->seller->id;
-                $sellerSale->order_id       = $order->id;
+                    $sellerSale = new SellerSale();
+                    $sellerSale->product_id     = $request['product_id'];
+                    $sellerSale->user_id        = $user->id;
+                    $sellerSale->number_order   = $charge->created;
+                    $sellerSale->seller_id      = $product->seller->id;
+                    $sellerSale->order_id       = $order->id;
 
-                $sellerSale->save();
+                    $sellerSale->save();
 
-                DB::commit();
+                    DB::commit();
 
-                return response()->json($charge, 200);
-            } else {
-                return response()->json(['error' => 'Not found product'], 401);
+                    return response()->json($charge, 200);
+                } else {
+                    return response()->json(['error' => 'Not found product'], 401);
+                }
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e], 500);
             }
-
         }
     }
 
