@@ -111,7 +111,7 @@ class PaymentsController extends Controller
 
     public function createPayment(Request $request)
     {
-        if ($request->isJson()) {
+        //if ($request->isJson()) {
 
             $this->validate($request,[
                 'stripeToken'       => 'required',
@@ -202,7 +202,7 @@ class PaymentsController extends Controller
                 return response()->json(['error' => 'Product is not array'], 401);
             }
 
-        }
+        //}
     }
 
 
