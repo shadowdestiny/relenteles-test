@@ -205,7 +205,7 @@ class PaymentsController extends Controller
                 }
 
             } catch (\Exception $e) {
-                return response()->json(['error' => $e], 500);
+                return response()->json(['error' => $e], 401);
             }
 
         }
