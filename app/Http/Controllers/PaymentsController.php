@@ -95,6 +95,12 @@ class PaymentsController extends Controller
                     $sellerSale->seller_id      = $product->seller->id;
                     $sellerSale->order_id       = $order->id;
 
+                    $sellerSale->shipping_status        = "0";
+                    $sellerSale->number_tracking        = "0";
+                    $sellerSale->shipping_address       = "0";
+                    $sellerSale->shipping_city          = "0";
+                    $sellerSale->shipping_zipcode       = "0";
+
                     $sellerSale->save();
 
                     DB::commit();
