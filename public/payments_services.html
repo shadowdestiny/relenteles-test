@@ -1,0 +1,167 @@
+<html>
+
+
+<head>
+	<script src="https://checkout.stripe.com/checkout.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<style type="text/css">
+		/**
+ * The CSS shown here will not be introduced in the Quickstart guide, but shows
+ * how you can use CSS to style your Element's container.
+ */
+		.StripeElement {
+			background-color: white;
+			height: 40px;
+			padding: 10px 12px;
+			border-radius: 4px;
+			border: 1px solid transparent;
+			box-shadow: 0 1px 3px 0 #e6ebf1;
+			-webkit-transition: box-shadow 150ms ease;
+			transition: box-shadow 150ms ease;
+		}
+
+		.StripeElement--focus {
+			box-shadow: 0 1px 3px 0 #cfd7df;
+		}
+
+		.StripeElement--invalid {
+			border-color: #fa755a;
+		}
+
+		.StripeElement--webkit-autofill {
+			background-color: #fefde5 !important;
+		}
+	</style>
+
+</head>
+<body>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<form action="/charge" method="post" id="payment-form">
+	<div class="form-row">
+		<label for="card-element">
+			Credit or debit card
+		</label>
+		<div id="card-element">
+			<!-- A Stripe Element will be inserted here. -->
+		</div>
+
+		<!-- Used to display form errors. -->
+		<div id="card-errors" role="alert"></div>
+	</div>
+
+	<input type="text" id="code" value="acct_1DjrWBLOCchfzEzF">
+	<input type="text" id="token_web" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImN1c3RvbWVyQGN1c3RvbWVyLmNvbSIsImV4cCI6MTU0Nzc0MTI5OCwic3ViIjo1LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwOTAvdXNlcnMvbG9naW4iLCJpYXQiOjE1NDcxMzY0OTgsIm5iZiI6MTU0NzEzNjQ5OCwianRpIjoiWFV1Q3czZzBHSkFCY3F1VCJ9.q6e9iPksHBURr_cAq0TnHnmoOgAjO30_XIp3KV2M15g" placeholder="token webservice">
+
+	<button>Submit Payment</button>
+</form>
+<script>
+
+    // Create a Stripe client.
+    var stripe = Stripe('pk_test_QUvZpBENlLD5dJYzqOAHUZR1');
+
+    // Create an instance of Elements.
+    var elements = stripe.elements();
+
+    // Custom styling can be passed to options when creating an Element.
+    // (Note that this demo uses a wider set of styles than the guide below.)
+    var style = {
+        base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#aab7c4'
+            }
+        },
+        invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+        }
+    };
+
+    // Create an instance of the card Element.
+    var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into the `card-element` <div>.
+    card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function(event) {
+        var displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    // Handle form submission.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        stripe.createToken(card).then(function(result) {
+            if (result.error) {
+                // Inform the user if there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+            } else {
+                // Send the token to your server.
+                stripeTokenHandler(result.token);
+            }
+        });
+    });
+
+    // Submit the form with the token ID.
+    function stripeTokenHandler(token) {
+        // Insert the token ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'text');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+
+        alert($("#code").val());
+
+        // Submit the form
+
+        $.ajax({
+            method:"POST",
+            url: "http://localhost:8090/payment_product",
+            //url: "http://35.202.88.103/payment_product",
+            dataType : "json",
+            headers : {
+                "Content-Type":"application/json",
+                "Api-Token": $("#token_web").val()
+            },
+            data: JSON.stringify({
+                "stripeToken" : token.id,
+                "products" : [
+					{
+						"unit": 10,
+						"id": 1
+					}
+				],
+				"number_tracking": 123,
+				"shipping_status": 0,
+				"shipping_address": "2749 Cartwright Ford Apt. 063nWelchside, AL 74282-6554",
+				"shipping_city": "Buckridgemouth",
+				"shipping_zipcode": "12344"
+            })
+            //context: document.body
+        }).done(function() {
+            alert("send data to out server! :-)");
+        });
+
+        //form.submit();
+    }
+
+</script>
+</body>
+
+</html>

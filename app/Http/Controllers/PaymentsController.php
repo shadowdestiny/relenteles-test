@@ -140,10 +140,10 @@ class PaymentsController extends Controller
                 if (is_array($request["products"])){
 
                     // Create a Customer:
-                    $customer = \Stripe\Customer::create([
+                   /* $customer = \Stripe\Customer::create([
                         'source'    => $stripeToken,
                         'email'     => $user->email,
-                    ]);
+                    ]);*/
 
                     $order = new Order();
                     $order->buyer_id = $user->id;
@@ -174,7 +174,8 @@ class PaymentsController extends Controller
                                     "amount"         => ($amount - $fee) * 100,
                                     "currency"       => "usd",
                                     "description"    => $product->description . " unit: (".$unit.")",
-                                    'customer'       => $customer->id,
+                                    //'customer'       => $customer->id,
+                                    "source"         => $stripeToken,
                                     "application_fee" => ceil($fee * 100),
                                 ],["stripe_account" => $product->seller->stripe_id]);
 

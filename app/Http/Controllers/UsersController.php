@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Stripe\Stripe;
 use Tymon\JWTAuth\Facades\JWTAuth;
 //use Intervention\Image\Facades\Image;
 
@@ -70,27 +71,35 @@ class UsersController extends Controller
 				return response()->json(['error' => 'User already exists'], 401, []);
 			} else {
 
-                if ($data['type_user'] === 1)
+                if ($data['type_user'] === 1) {
+
+                    Stripe::setApiKey(env('STRIPE_KEY'));
+
+                    $response = \Stripe\Account::create([
+                        "type" => "custom",
+                        "country" => "US",
+                        "email" => $request["email"]
+                    ]);
 
                     $user = User::create([
-                        'first_name'                => $data['first_name'],
-                        'last_name'                 => $data['last_name'],
-                        'shipping_address'          => $data['shipping_address'],
-                        'shipping_city'             => $data['shipping_city'],
-                        'shipping_state'            => $data['shipping_state'],
-                        'shipping_zipcode'          => $data['shipping_zipcode'],
-                        'youtube_url'               => $data['youtube_url'],
-                        'spotify_url'               => $data['spotify_url'],
-                        'podcast_url'               => $data['podcast_url'],
-                        'itunes_url'                => $data['itunes_url'],
-                        'email'                     => $data['email'],
-                        'password'                  => Hash::make($data['password']),
-                        'api_token'                 => 'none',
-                        'image'                     => $data['image'],
-                        'type_user'                 => $data['type_user'],
-                        'stripe_id'                 => isset($data['stripe_id']) ? $data['stripe_id'] : null,
+                        'first_name' => $data['first_name'],
+                        'last_name' => $data['last_name'],
+                        'shipping_address' => $data['shipping_address'],
+                        'shipping_city' => $data['shipping_city'],
+                        'shipping_state' => $data['shipping_state'],
+                        'shipping_zipcode' => $data['shipping_zipcode'],
+                        'youtube_url' => $data['youtube_url'],
+                        'spotify_url' => $data['spotify_url'],
+                        'podcast_url' => $data['podcast_url'],
+                        'itunes_url' => $data['itunes_url'],
+                        'email' => $data['email'],
+                        'password' => Hash::make($data['password']),
+                        'api_token' => 'none',
+                        'image' => $data['image'],
+                        'type_user' => $data['type_user'],
+                        'stripe_id' => $response->id,
                     ]);
-                else
+                } else
                     $user = User::create([
                         'first_name'                => $data['first_name'],
                         'last_name'                 => $data['last_name'],
@@ -144,10 +153,20 @@ class UsersController extends Controller
                     return response()->json(['error' => 'Other user is assigned this email'], 406);
                 } else {
                     if ($user->type_user === 1){
+
+                        Stripe::setApiKey(env('STRIPE_KEY'));
+
+                        $response = \Stripe\Account::create([
+                            "type" => "custom",
+                            "country" => "US",
+                            "email" => $request["email"]
+                        ]);
+
                         $user->youtube_url          = $data['youtube_url'];
                         $user->spotify_url          = $data['spotify_url'];
                         $user->podcast_url          = $data['podcast_url'];
                         $user->itunes_url           = $data['itunes_url'];
+                        $user->stripe_id            = $response->id;
                     }
                     $user->first_name           = $data['first_name'];
                     $user->last_name            = $data['last_name'];
