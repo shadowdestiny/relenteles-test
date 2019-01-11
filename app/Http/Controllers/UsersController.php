@@ -63,63 +63,83 @@ class UsersController extends Controller
                 'image'                 => 'max:1024',
             ]);
 
-            $data = $request->json()->all();
-			
-			$user = User::where("email","=",$data['email'])->first();
-			
-			if ($user){
-				return response()->json(['error' => 'User already exists'], 401, []);
-			} else {
+            try{
+                $data = $request->json()->all();
 
-                if ($data['type_user'] === 1) {
+                $user = User::where("email","=",$data['email'])->first();
 
-                    Stripe::setApiKey(env('STRIPE_KEY'));
+                if ($user){
+                    return response()->json(['error' => 'User already exists'], 401, []);
+                } else {
 
-                    $response = \Stripe\Account::create([
-                        "type" => "custom",
-                        "country" => "US",
-                        "email" => $request["email"]
-                    ]);
+                    if ($data['type_user'] === 1){
 
-                    $user = User::create([
-                        'first_name' => $data['first_name'],
-                        'last_name' => $data['last_name'],
-                        'shipping_address' => $data['shipping_address'],
-                        'shipping_city' => $data['shipping_city'],
-                        'shipping_state' => $data['shipping_state'],
-                        'shipping_zipcode' => $data['shipping_zipcode'],
-                        'youtube_url' => $data['youtube_url'],
-                        'spotify_url' => $data['spotify_url'],
-                        'podcast_url' => $data['podcast_url'],
-                        'itunes_url' => $data['itunes_url'],
-                        'email' => $data['email'],
-                        'password' => Hash::make($data['password']),
-                        'api_token' => 'none',
-                        'image' => $data['image'],
-                        'type_user' => $data['type_user'],
-                        'stripe_id' => $response->id,
-                    ]);
-                } else
-                    $user = User::create([
-                        'first_name'                => $data['first_name'],
-                        'last_name'                 => $data['last_name'],
-                        'shipping_address'          => $data['shipping_address'],
-                        'shipping_city'             => $data['shipping_city'],
-                        'shipping_state'            => $data['shipping_state'],
-                        'shipping_zipcode'          => $data['shipping_zipcode'],
-                        'email'                     => $data['email'],
-                        'password'                  => Hash::make($data['password']),
-                        'api_token'                 => 'none',
-                        'image'                     => $data['image'],
-                        'type_user'                 => $data['type_user'],
-                    ]);
+                        if (!isset($request["routing_number"]))
+                            return response()->json(['error' => 'the routing_number property is empty'], 406);
+
+                        if (!isset($request["account_number"]))
+                            return response()->json(['error' => 'the account_number property is empty'], 406);
+
+
+                        Stripe::setApiKey(env('STRIPE_KEY'));
+
+                        $response = \Stripe\Account::create([
+                            "type" => "custom",
+                            "country" => "US",
+                            "email" => $request["email"],
+                            "external_account" => [
+                                "object" => "bank_account",
+                                "country" => "US",
+                                "currency" => "usd",
+                                "routing_number" => $request["routing_number"],
+                                "account_number" => $request["account_number"],
+                            ],
+                        ]);
+
+                        $user = User::create([
+                            'first_name' => $data['first_name'],
+                            'last_name' => $data['last_name'],
+                            'shipping_address' => $data['shipping_address'],
+                            'shipping_city' => $data['shipping_city'],
+                            'shipping_state' => $data['shipping_state'],
+                            'shipping_zipcode' => $data['shipping_zipcode'],
+                            'youtube_url' => $data['youtube_url'],
+                            'spotify_url' => $data['spotify_url'],
+                            'podcast_url' => $data['podcast_url'],
+                            'itunes_url' => $data['itunes_url'],
+                            'email' => $data['email'],
+                            'password' => Hash::make($data['password']),
+                            'api_token' => 'none',
+                            'image' => $data['image'],
+                            'type_user' => $data['type_user'],
+                            'stripe_id' => $response->id,
+                        ]);
+                    } else
+                        $user = User::create([
+                            'first_name'                => $data['first_name'],
+                            'last_name'                 => $data['last_name'],
+                            'shipping_address'          => $data['shipping_address'],
+                            'shipping_city'             => $data['shipping_city'],
+                            'shipping_state'            => $data['shipping_state'],
+                            'shipping_zipcode'          => $data['shipping_zipcode'],
+                            'email'                     => $data['email'],
+                            'password'                  => Hash::make($data['password']),
+                            'api_token'                 => 'none',
+                            'image'                     => $data['image'],
+                            'type_user'                 => $data['type_user'],
+                        ]);
 
                     $user->api_token = JWTAuth::fromUser($user,['email'=>$user->email]);
                     $user->save();
 
                     return response()->json($user, 201);
 
-			}
+                }
+            } catch (\Exception $exception){
+                return response()->json(['error' => $exception->getMessage()], 406);
+            }
+
+
         } else {
             return response()->json(['error' => 'Unauthorized'], 401, []);
         }
@@ -152,22 +172,44 @@ class UsersController extends Controller
                 if (User::where('id','<>',$id)->where('email','=',$data['email'])->first()) {
                     return response()->json(['error' => 'Other user is assigned this email'], 406);
                 } else {
-                    if ($user->type_user === 1){
 
-                        Stripe::setApiKey(env('STRIPE_KEY'));
+                    if ($user->type_user === "1"){
 
-                        $response = \Stripe\Account::create([
-                            "type" => "custom",
-                            "country" => "US",
-                            "email" => $request["email"]
-                        ]);
+                        try {
+                            Stripe::setApiKey(env('STRIPE_KEY'));
 
-                        $user->youtube_url          = $data['youtube_url'];
-                        $user->spotify_url          = $data['spotify_url'];
-                        $user->podcast_url          = $data['podcast_url'];
-                        $user->itunes_url           = $data['itunes_url'];
-                        $user->stripe_id            = $response->id;
+                            if (isset($request["routing_number"]) && isset($request["account_number"])){
+
+                                $response = \Stripe\Account::create([
+                                    "type" => "custom",
+                                    "country" => "US",
+                                    "email" => $request["email"],
+                                    "external_account" => [
+                                        "object" => "bank_account",
+                                        "country" => "US",
+                                        "currency" => "usd",
+                                        "routing_number" => $request["routing_number"],
+                                        "account_number" => $request["account_number"],
+                                    ],
+                                ]);
+                            } else {
+                                $response = \Stripe\Account::create([
+                                    "type" => "custom",
+                                    "country" => "US",
+                                    "email" => $request["email"],
+                                ]);
+                            }
+
+                            $user->youtube_url          = $data['youtube_url'];
+                            $user->spotify_url          = $data['spotify_url'];
+                            $user->podcast_url          = $data['podcast_url'];
+                            $user->itunes_url           = $data['itunes_url'];
+                            $user->stripe_id            = $response->id;
+                        } catch (\Exception $exception){
+                            return response()->json(['error' => $exception->getMessage()], 406);
+                        }
                     }
+
                     $user->first_name           = $data['first_name'];
                     $user->last_name            = $data['last_name'];
                     $user->shipping_address     = $data['shipping_address'];
