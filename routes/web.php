@@ -16,7 +16,8 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/key', function () {
-    return str_random(32);
+    // return str_random(32);
+    return response()->json(['hola' => str_random(32)], 200);
 });
 
 
